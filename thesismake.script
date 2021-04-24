@@ -1,0 +1,26 @@
+rm *.aux
+rm *.bbl
+rm *.blg
+rm *.log
+rm *.pdf
+rm *.gz
+rm *.toc
+rm *.dvi
+
+latex thesis.tex
+#bibtex ch1HistoryandTaskBasedApproach.aux
+#bibtex ch2Physics.aux
+#bibtex ch3DataSimulation.aux
+#bibtex ch4IdealObserver.aux
+#bibtex ch5HotellingObserver.aux
+#bibtex ch6NullHypothesis.aux
+#bibtex ch7FutureWork.aux
+bibtex thesis.aux
+
+latex thesis.tex
+latex thesis.tex
+pdflatex thesis.tex
+pdflatex thesis.tex
+
+
+
