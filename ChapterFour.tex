@@ -4,41 +4,162 @@ To assess the performance of the 3PWFS compared to the 4PWFS, a simulation was d
 
 \section{The Object Oriented Matlab Adaptive Optics toolbox}
 
-The OOMAO toolbox is a library of classes that are used to assemble objects that simulate different components of an adaptive optics system. The electric field is propagated object to object according to the optical path of a real AO system. The main classes include: The source class, atmosphere telescope class, deformable mirror class, pyramid class, and the detector class. The source class generates the beacon guide star used by the AO system for wavefront sensing. The guide star object contains the information of the wavelength bandpass of the system, and the user can set the magnitude of the guide star to change the intensity of light at the detector. The light from the guide star is propagated through the atmosphere to the telescope object. The atmosphere class generates the phase screens that are used to simulate turbulence. The number of layers, the wind speed, Fried parameter $r_0$, and outer and inner scale of the turbulence profile can be set. The resulting phase screens are scaled and compressed into a single phase screen in the pupil plane.  The telescope object defines the aperture of the system, the system resolution, and the exposure time. The default setting is a clear circular aperture, but central obscurations can be modeled from within OOMAO. The user can provide their own pupil mask for more complex apertures. The deformable mirror object contains the basis set used for modal wavefront sensing. In the OOMAO library there are class files to generate Zernike modes and Fourier modes. The number of actuators and the influence function of each actuator can be set by the user. For our simulations we use a Bezier influence function which is one of the provided influence functions by OOMAO. The pyramid object simulates the pyramid wavefront sensor by using a phase mask to simulate the pyramid tip. The user can select the number of facets, and the apex angle of the pyramid which sets the separation on the WFS detector. The sampling of each of the pupils and the radius of modulation are also user defined attributes to this object. The detector object records the intensity at the focal plane. At the detector the user can turn on photon noise, as well as set the read noise for the detector. 
+The OOMAO toolbox is a library of classes that are used to assemble objects that simulate different components of an adaptive optics system. The electric field is propagated object to object according to the optical path of a real AO system. The main classes include: The source class, atmosphere telescope class, deformable mirror class, pyramid class, and the detector class. The source class generates the beacon guide star used by the AO system for wavefront sensing. The guide star object contains the information of the wavelength bandpass of the system, and the user can set the magnitude of the guide star to change the intensity of light at the detector. The light from the guide star is propagated through the atmosphere to the telescope object. The atmosphere class generates the phase masks that are used to simulate turbulence. The number of layers, the wind speed, Fried parameter $r_0$, and outer and inner scale of the turbulence profile can be set. The resulting phase masks are scaled and compressed into a single phase mask in the pupil plane.  The telescope object defines the aperture of the system, the system resolution, and the exposure time. The default setting is a clear circular aperture, but central obscurations can be modeled from within OOMAO. The user can provide their own pupil mask for more complex apertures. The deformable mirror object contains the basis set used for modal wavefront sensing. In the OOMAO library there are class files to generate Zernike modes and Fourier modes. The number of actuators and the influence function of each actuator can be set by the user. For our simulations we use a Bezier influence function which is one of the provided influence functions by OOMAO. The pyramid object simulates the pyramid wavefront sensor by using a phase mask to simulate the pyramid tip. The user can select the number of facets, and the apex angle of the pyramid which sets the separation on the WFS detector. The sampling of each of the pupils and the radius of modulation are also user defined attributes to this object. The detector object records the intensity at the focal plane. At the detector the user can turn on photon noise, as well as set the read noise for the detector. 
 
-\begin{lstlisting}[language=Python, caption=Python example]
-ngs=source
-\end{lstlisting}
+% Listed below is example code to generate the objects in OOMAO.
+
+% \begin{lstlisting}[language=Matlab]
+% %% Guide Star
+% % Single guide star at infinity, R-band wavelength.
+%     ngs=source('wavelength',photometry.R);
+
+% % Science source for Strehl calculation
+%     science=source('wavelength',photometry.R);
+
+% %% Atmosphere
+% %Fried parameter [m]
+%     r0=16e-2;
+% %Outer Scale [m]
+%     L0=6.25; 
+% %Wind speed [m/s]
+%     v=7.4;      
+
+% % makes an atmosphere object with the given parameters 
+% %at the given wavelength
+%     atm=atmosphere(photometry.R,r0,L0,'windSpeed',...
+%     v,'windDirection',0);
+
+% %% Telescope
+% %Diameter of the telescope in meters
+%     D=2  
+% %Diameter of the circular entrance pupil in pixels.
+% %Sets the sampling of the phase that is generated.
+% %Adjust to avoid alaising.
+%     nPx=240     
+             
+% %Frequency in Hz. Sets the integration time and 
+% %the simulated loop speed.
+%     freq=300    
+            
+
+%     tel= telescope(D,'resolution',nPx,...
+%     'samplingTime',1/freq);
+
+% %% Deformable Mirror
+% %Generates a deformable mirror, that is a grid of actuators 
+% %that fill a circular aperture
+
+% %Diameter in actuators of the circular aperture of the DM
+%     nAct=9;   
+% %Max spatial frequency corrected by the DM
+%     d=D/(nAct-1);
+%     fmax=1/(2*d); 
+% %Max mode # corrected by the DM
+%     nMax=ceil(D*fmax/0.37-1);       
 
 
 
+% %Zernike basis set
+% %Number of modes in the basis set to generate
+%     nModes=sum(1:nMax+1)-1;         
+% %Zernike basis set generation
+% %zern=zernike(2:nModes+1, D, 'resolution', nPx);  
+% %Bezier Influence function
+%     bif = influenceFunction('monotonic',30/100);    
+% %Generates the circular aperture of the DM
+%     v=utilities.circle(nAct,nAct);  
+
+% % Deformable mirror object
+%     dm = deformableMirror(nAct,...
+%         'modes',bif,...
+%         'resolution',nPx,...
+%         'validActuator',logical(v));
+
+% %% Wavefront Sensor
+% %PWFS pupils 20 pixels in diameter
+%     nSamp=20 
+% %Modulation radius 5 lambda/D
+%     mod=5
+% %Apex angle of the pyramid. 
+% %Sets the separation of pupils
+%     alpha=pi/3 
+% %Number of sides on the pyramid. 
+% %3 and 4 used for simulation.
+%     nFaces=3        
+
+% %ngs = guide star object
+% %tel= telescope object
+% %FWHM in pixels of the focal point spot on the pyramid tip
+%     c=2
+% %Rotates the pyramid mask to change 
+% %orientation of pupils on the detector
+%     rotation=3*pi/2
+
+% %Flag that controls what PWFS signal handling method is used. 
+% %0 is Slopes Maps, 2 is Raw Intensity. 
+% %1 was a failed experiment ignore.
+%     altSlopes=0            
+% %A flag used to generate an alternative 
+% %phase mask for the 3PWFS tip
+% %For use on the Spatial Light Modulator on LOOPs. Ignore.                        
+%     alternative=0                                       
+                        
+%     wfs = pyramid(nSamp,nPx,'modulation',mod, 
+%     'alpha',alpha,'nFaces',nFaces, 'src',ngs,...
+%     'tel',tel, 'c', c,'rotation',rotation,...
+%     'altSlopes',altSlopes,... 
+%     'alternative', alternative);
+
+% %% Science Camera
+% %generates the science camera object with a focal plane 
+% %resolution given by the diameter of the telescope aperture.
+
+%     cam=imager('diameter', tel.D);
+% \end{lstlisting}
 
 
 
-
-\section{The Pyramid Object}
-\subsection{The Phase Screen}
-\subsection{Signal Handling}
-\subsection{Calibration}
+\section{The Pyramid Class}
+The master OOMAO toolbox simulates a 4PWFS using Slopes Maps. This section details the changes made to the pyramid class to simulate the 3PWFS.
 
 
+\subsection{The Pyramid Phase mask}
+The PWFS is simulated using a single tip/tilt phase mask that is segmented into N parts. The mask mask is used at the focal plane to simulate the pyramid tip. In the master OOMAO toolbox the function that generated the pyramid tip phase mask only generated a 4PWFS mask. To generate the 3PWFS code was adapted from the function that generated the phase masks for the spatial light modulator on the LOOPs testbed. The code was adjusted to have the same scaling as the original mask generator, so that a given apex angle gives the same separation for both functions.
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{Chapter Materials/Chapter Four Materials/phaseMask.png}
+    \caption{A. The spiral grid of angular values used to determine where to segments the PWFS facets based on rotation and number of facets. B.C.D. Examples of the binary masks used to segment the pupil plane. Each mask is then given a tip/tilt phase and summed to create the phase mask that simulates the pyramid tip. }
+    \label{fig:phaseMask}
+\end{figure}
 
-
-
-The PWFS is simulated using a single tip/tilt phase mask that is segmented into N parts. Figure \ref{fig:oomaoFigs}.A and \ref{fig:oomaoFigs}.C show the masks for the 3PWFS and 4PWFS. The masks are scaled and rotated according to a user input for rotation and pyramid apex angle that controls the separation of the pyramid pupils. After scaling, the mask is converted into a phase mask that is applied at the focal plane to simulate a pyramid tip. Figure \ref{fig:oomaoFigs}.C and \ref{fig:oomaoFigs}.D show the resulting pyramid pupils on the simulated wavefront sensor camera, using a flat wavefront and 5 $\lambda/D$ modulation. The master OOMAO toolbox simulates a 4PWFS using Slopes Maps. We extended the PWFS class in OOMAO to include a 3PWFS, taking care that the amplitude of the tip/tilt phase in the 3PWFS phase screen generation matched that of 4PWFS. We included our derivation of the Slopes Maps equation for the 3PWFS (derived in Section~\ref{SlopesDerivation} below), and added the Raw Intensity method for both the 4PWFS and the 3PWFS. For both the Slopes Maps and Raw Intensity method the signal was normalized by the mean value across all valid pixels on the wavefront sensor detector, instead of normalizing pixel by pixel. 
+ The mask code works by creating a spiral grid of angular values from $-pi$ to $pi$ centered middle of the frame, as shown in Figure \ref{fig:phaseMask}.A. The grid is used to segment the focal plane into the number of parts corresponding to the number of sides of the pyramid, and the rotation of the facets. A mask is made for each facet; and an example of the 3PWFS facet masks are shown in Figure \ref{fig:phaseMask}.B,Figure \ref{fig:phaseMask}.C, and Figure \ref{fig:phaseMask}.D. A phase is added to each of the masks, and then scaled according to a user inputted apex angle that controls the amount of tip/tilt phase in the mask that sets the separation of the pyramid pupils. The masks are then summed to produce the final phase mask for the pyramid tip. Figure \ref{fig:oomaoFigs}.A and \ref{fig:oomaoFigs}.C show the masks for the 3PWFS and 4PWFS. Figure \ref{fig:oomaoFigs}.C and \ref{fig:oomaoFigs}.D show the resulting pyramid pupils on the simulated wavefront sensor camera, using a flat wavefront and 5 $\lambda/D$ modulation. 
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{oomaoFigs.png}
-    \caption{Details of the simulated PWFS in OOMAO. A) and B) The simulated 3PWFS and 4PWFS pyramid masks in OOMAO. These masks are used as a phase screen in the pupil plane to emulate the focal plane splitting and separation done by a real glass pyramid. C) and D) The pupils from the 3PWFS and 4PWFS respectively on the simulated detector. In OOMAO the user can change the size, separation, and intensity values of the pupils through user defined inputs.}
+    \includegraphics[width=1\textwidth]{Chapter Materials/Chapter Four Materials/oomaoFigs.png}
+    \caption{Details of the simulated PWFS in OOMAO. A) and B) The simulated 3PWFS and 4PWFS pyramid masks in OOMAO. These masks are used as a phase mask in the pupil plane to emulate the focal plane splitting and separation done by a real glass pyramid. C) and D) The pupils from the 3PWFS and 4PWFS respectively on the simulated detector. In OOMAO the user can change the size, separation, and intensity values of the pupils through user defined inputs.}
     \label{fig:oomaoFigs}
+\end{figure}
+
+\subsection{Signal Handling}
+
+The master OOMAO toolbox simulates a 4PWFS using Slopes Maps. We extended the PWFS class in OOMAO to include the Slopes Maps equations for both the 3PWFS and the 4PWFS, as well as the Raw Intensity method. The pyramid class in OOMAO was hard-coded to expect a matrix size that corresponded to the Slopes Maps signals. For example, if a pyramid pupil was 20 pixels in diameter inside of a 20x20 matrix, the SM measurement would be a 20x40 matrix, because it produces a $S_x$ and  a $S_y$ measurement. The Raw Intensity signal is a matrix the size of the full frame of the detector. Part of this work was to restructure the pyramid class to accept an arbitrary matrix size.  We included our derivation of the Slopes Maps equation for the 3PWFS derived in Section \ref{Slopes}. For both the Slopes Maps and Raw Intensity method the signal was normalized by the mean value across all valid pixels on the wavefront sensor detector, instead of normalizing pixel by pixel. 
+
+The Slopes Maps calculation requires the knowledge of the location of the pupils on the detector. Each pupil is cropped out and combined with the other pupils for the SM calculation. In the master OOMAO class the location of the pupil is determined by a calibration step that generates a PWFS with high modulation and no phase error. The result are highly uniform pupils on the detector. The detector is split into four quadrants, and each quadrant is thresholded to create a valid detector pixel mask. In the SM calculation, the PWFS signal is divided the same way, and the valid detector pixel mask for each quadrant is applied. This methodology is incompatible with the new way of generating the PWFS masks, which allows for an N-sided pyramid with rotation. A new method of determining the valid detector pixels was developed to be more robust for different PWFS. This method uses the same calibration PWFS. The detector image is thresholded to mask out any pixels with a low signal, and the image is converted into a binary mask, where the pixels that contain the pupil signals have a value of 1, and all other pixels have a value of 0. Built in Matlab functions are then used to detect regions, and calculate the centroid of those regions. The resulting binary masks for the 3PWFS and 4PWFS are shown in Figure \pyrcen A and B. Over-plotted is the location of the calculated centroid given by a dot in the center of each of the regions. OOMAO uses the centroid coordinates to pull out each of the pupils for the SM calculation.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.8\textwidth]{Chapter Materials/Chapter Four Materials/pyramidCenters.png}
+    \caption{The calculated binary masks used to detect the location of the pyramid pupils. Over-plotted is the location of the calculated centroid given by a dot in the center of each of the regions.}
+    \label{fig:pyrcen}
 \end{figure}
 
 
 \section{Performance Comparison of the 3PWFS and 4PWFS}
 \subsection{Simulation}
 
-Using OOMAO an end to end simulation of an adaptive optics system was written to compare the performance of the 3PWFS and 4PWFS using both Raw Intensity and Slopes.  The goal was to measure the quality of correction from the AO closed loop by calculating the Strehl Ratio produced by each wavefront sensor as a function of guide star magnitude. In this simulation the Strehl ratio was calculated using OOMAO's built in Strehl calculator, which uses the OTF calculated from a PSF with no phase aberration, and a PSF with AO compensated phase aberration. The details of the simulation are summarized in the flow chart in Figure \ref{fig:simulationl}. To characterize the sensitivity of each sensor to read noise the following experiment was performed twice, once at $0.5e^-$ read noise to match that of an OCAM2K camera, and once at $12 e^-$ read noise to match the noisest camera on the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI) at the UA Extreme Wavefront Control Lab (XWCL). Listed below is the experiment performed in OOMAO:
+Using OOMAO an end to end simulation of an adaptive optics system was written to compare the performance of the 3PWFS and 4PWFS using both Raw Intensity and Slopes.  The goal was to measure the quality of correction from the AO closed loop by calculating the Strehl Ratio produced by each wavefront sensor as a function of guide star magnitude. In this simulation the Strehl ratio was calculated using OOMAO's built in Strehl calculator, which uses the OTF calculated from a PSF with no phase aberration, and a PSF with AO compensated phase aberration. The details of the simulation are summarized in the flow chart in Figure \ref{fig:simulationl}. To characterize the sensitivity of each sensor to read noise the following experiment was performed twice, once at $0.5e^-$ read noise to match that of an OCAM2K camera, and once at $12 e^-$ read noise to match the noisest camera on the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI) at the UA Extreme Wavefront Control Lab (XWCL). Listed below is the experiment performed in OOMAO:===========================================================================================================vc 
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 \begin{itemize}
     \item Guide star magnitude was varied incrementally from 0 to 12th magnitude in steps of 2.
@@ -52,7 +173,7 @@ Using OOMAO an end to end simulation of an adaptive optics system was written to
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{simulation.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Four Materials/simulation.png}
     \caption{Experimental details of the simulation done in OOMAO. Light starts at the natural guide star and is propagated through the atmosphere, telescope and wavefront sensor. The wavefront sensor measures a correction that is then applied by the deformable mirror.  The resulting AO corrected PSF is recorded on a noiseless science camera. }
     \label{fig:simulationl}
 \end{figure}
@@ -64,7 +185,7 @@ In Figure \ref{fig:overall}, no significant difference in performance was found 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{StrehlvGuideStar4v3.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Four Materials/StrehlvGuideStar4v3.png}
     \caption{Strehl vs Guide Star magnitude for each PWFS. The steep drop off in performance of the lower curves is due to the effects of 12$e^-$ read noise. At guide star magnitude of 10, the read noise starts to matter, and the 3PWFS out performs the 4PWFS. }
     \label{fig:overall}
 \end{figure}
@@ -72,14 +193,14 @@ In Figure \ref{fig:overall}, no significant difference in performance was found 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=.7\linewidth]{StrehlvGuideStarvs4PWFSRM0e.png}
+    \includegraphics[width=.7\linewidth]{Chapter Materials/Chapter Four Materials/StrehlvGuideStarvs4PWFSRM0e.png}
     \caption{Comparison plot of wavefront sensor performance vs the 4PWFS using Slopes at 0.5 $e^-$ read noise. }
     \label{fig:0RN}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=.7\linewidth]{StrehlvGuideStarvs4PWFSRM12e.png}
+    \includegraphics[width=.7\linewidth]{Chapter Materials/Chapter Four Materials/StrehlvGuideStarvs4PWFSRM12e.png}
     \caption{Comparison plot of wavefront sensor performance vs the 4PWFS using Slopes at 12 $e^-$ read noise.}
     \label{fig:12RN}
 \end{figure}
