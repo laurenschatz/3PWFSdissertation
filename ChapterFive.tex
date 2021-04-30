@@ -7,12 +7,11 @@ the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI), was d
 \section{Design of CACTI}
 CACTI was designed to model a full end-to-end adaptive optics system and have the flexibility to support multiple experiments. In the configuration described here CACTI consisted of two components, an adaptive optics simulator and a pyramid wavefront sensor testbed. In the following sections we describe the optical design in detail. 
 
-
 \subsection{Adaptive Optics Simulator}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{CACTIzemax.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/CACTIzemax.png}
     \caption{Optical design of CACTI. Light starts from a point source from the HeNe laser and relayed through a series of afocal pupil relays. The focal plane of the AO simulator is after the 6${^{th}}$ OAP. It is collimated by a lens and passed into the PWFS testbed. A beamsplitter sends the same focal plane to both the 3PWFS and 4PWFS to minimize non-common path errors.}
     \label{fig:CACTIZemax}
 \end{figure}
@@ -53,7 +52,7 @@ CACTI was designed to simulate atmospheric turbulence and a complete closed loop
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{CACTI.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/CACTI.png}
     \caption{In the current configuration CACTI consists of an Adaptive Optics Simulator and the PWFS testbed. Beamsplitters are used in CACTI to provide access to focal planes, collimated spaces, and additional sources. In the current configuration light is relayed through the AO simulator onto the 1024 actuator Boston Micromachine 1K (BMC1K) DM OAP mirrors. The light is then passed to the PWFS testbed which includes a modulation mirror, a 4PWFS and a 3PWFS.}
     \label{fig:CACTI}
 \end{figure}
@@ -101,7 +100,7 @@ The design of the PWFS testbed is detailed in Figure \ref{fig:CACTI}. Light from
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{pyramidOptics.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/pyramidOptics.png}
     \caption{Drawings of the pyramid optics in CACTI. A. The 3PWFS pyramid is a single prism made from fused silica glass. The 4PWFS pyramid is two crossed roof prisms. This pyramid is a copy of of the pyramid used by SCeXAO. This drawing is Figure 2. from Jovanovic et al.\cite{jovanovic2016scexao}. }
     \label{fig:pyramidOptics}
 \end{figure}
@@ -128,14 +127,14 @@ The alignment of the adaptive optics simulator and PWFS tesbed in CACTI was comp
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{cactiTestbed.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/cactiTestbed.png}
     \caption{Image of the as-built CACTI testbed. Light starts from the HeNe laser and propagates through the AO simulator on the left half of the optical table. After the BMC1K and the final OAP, the light is relayed to the PWFS testbed on the right half of the optical table.}
     \label{fig:cactiTestbed}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{PWFStestbed.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/PWFStestbed.png}
     \caption{Close up image of the PWFS testbed. Light enters the system before L1 on the left side. The light is relayed onto the modulation mirror (PI). The through beam propagates through to the 3PWFS which consists of the pyramid optic (3P), camera lenses (C1$\&$2) and the Zyla CMOS camera (Camzyla). Light is by a beamsplitter (BS) to the 4PWFS arm which consists of the pyramid (4P), camera lenses (C3$\&$4) and the Basler CMOS camera (Cam4p).  }
     \label{fig:PWFStestbed}
 \end{figure}
@@ -145,7 +144,7 @@ The alignment of the adaptive optics simulator and PWFS tesbed in CACTI was comp
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{flatCACTI.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/flatCACTI.png}
     \caption{Signals from CACTI in response to the optimized flat wavefront. A. The PSF on the science camera. B. The optimized PSF on the focal plane of the PWFS tips. C. The 3PWFS pupils on Camzyla at 5 $\lambda/D$ modulation. D. The 4PWFS pupils on Cam4p at 5 $\lambda/D$ modulation.}
     \label{fig:flatCACTI}
 \end{figure}
@@ -160,26 +159,10 @@ The deformable mirror on CACTI was used to both generate the turbulence screen a
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{turbCACTI.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/turbCACTI.png}
     \caption{A. Time-averaged science camera image of the 3PWFS closed-loop PSF in log scale. B. Turbulence streaming across the 3PWFS pupils. C. Time-averaged science camera image of the 3PWFS closed-loop PSF in log scale. D. Turbulence streaming across the 4PWFS pupils.}
     \label{fig:turbCACTI}
 \end{figure}
-
-% \begin{table}
-% 	\begin{center}
-% 		\begin{tabular}{ | l|l|l | }
-% 			\hline
-% 			\textbf{Camera}& \textbf{Model} &\textbf{Read Noise}\\ \hline
-%              Camsci & Basler ACE acA640-750um CMOS  & 12.25 $e^-$ read noise\\ \hline
-%              Camzyla & Zyla 4.2+ sCMOS detector & 7.98 $e^-$ read noise \\ \hline
-%              Cam4p & Basler ace acA720-520um CMOS & 0.11 $e^-$ read noise \\ \hline
-%              Camtip & Basler ACE acA640-750um CMOS (DOUBLE CHECK)  & 9.30 $e^-$ read noise\\ \hline
-				
-% 			\end{tabular}
-% 		\end{center}
-% 	\caption{CACTI components}
-% 	\label{tab:CACTItable}
-% \end{table}
 
 
 \section{Experimental Details}
@@ -210,39 +193,13 @@ The first experiment performed on CACTI was to measure the Strehl Ratio as a fun
 
 
 
-
-	
- 
-
-
-%An adaptive optics system works on the concept of conjugate imaging. An object plane corresponding to a layer of atmospheric turbulence is imaged through the telescope AO system onto a deformable mirror where the correction is applied. To achieve this the bulk of an AO system on sky or in the lab consists of pupil relays.
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=1\textwidth]{psfs.png}
-%     \caption{PSFs on the science camera with A) Flat Wavefront, B) Turbulence, C) AO Corrected Turbulence.}
-%     \label{fig:PSF}
-% \end{figure}
-
- 
-
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=0.5\textwidth]{3poptic.png}
-%     \caption{The 3D model of the refractive 3 side pyramid optic.}
-%     \label{fig:3poptic}
-% \end{figure}
-
-
-
-
 \section{Results}
 We found that 3PWFS performed slightly better at higher modulations than the 4PWFS. At low modulation the performance of both PWFS was comparable for low turbulence strength. In stronger turbulence the 4PWFS slightly outperformed the 3PWFS. Figure \ref{fig:results} shows the resulting Strehl as a function of turbulence strength for modulations radii of 1.6 $\lambda/D$, 3.25 $\lambda/D$, and 5 $\lambda/D$. In these results, the Strehl ratio is the relative Strehl ratio in which the AO-corrected PSF is compared to the reference PSF. For each level of turbulence five different turbulent phase screens were used to measure the Strehl. A mean Strehl ratio was calculated for each of the turbulence screens. The accepted Strehl value of the PWFS at a turbulence strength is the average of the Strehl values from the five screens. The error bars were calculated by taking the standard deviation of the Strehl values from the five screens and dividing by the square-root of the number of screens. The data was processed by the Strehl calculation tool detailed in Appendix \ref{strehlct}. The difference in Strehl for the 3PWFS compared to the 4PWFS varies on average by +0.02 Strehl at 1.6 $\lambda/D$, +0.02 Strehl at +3.25 $\lambda/D$, and +0.03 Strehl at 5 $\lambda/D$ modulation. It is difficult to perform a direct comparison of these PWFS because any misalignments or non-common path errors in the camera lenses could result in a change in system performance. An effort was made to minimize these errors by taking all of the data on the same day, except for the 3PWFSRI 5 $\lambda/D$ modulation data which was taken two days after. The results show that the 3PWFS has comparable performance to the 4PWFS in our laboratory demonstration. 
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{StrehlvsTurbRI4vs3.png}
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/StrehlvsTurbRI4vs3.png}
     \caption{ Strehl as a function of turbulence strength for modulations radii of 1.6 $\lambda/D$, 3.25 $\lambda/D$, and 5 $\lambda/D$. In all trials the performance of both PWFS were comparable.  At larger modulations the 3PWFS performs slightly better. A large gain in performance is seen when the modulation radius is reduced.}
     \label{fig:results}
 \end{figure}
