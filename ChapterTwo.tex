@@ -1,65 +1,7 @@
-\chapter{Adaptive Optics and Wavefront Sensing}
+\chapter{The Pyramid Wavefront Sensor}\label{CH2}
 %Babcock. Summary of some on sky systems. 
 
 Adaptive optics systems correct for the blurring of Earth's atmosphere in real time. A key component of the AO closed loop is the wavefront sensor. Wavefront sensors encode phase errors into intensity patterns that are recorded on a detector. In this chapter we will describe how the process of measuring and applying a correction for a wavefront error starting from an electromagnetic wave with a phase error. We start with and introduction to adaptive optics and the pyramid wavefront sensor. We then derive the expected signal from the pyramid using an example phase error in the shape of a Fourier mode. We present two different methods of processing the wavefront sensor signal to preserve only the intensity patterns caused by a phase error. Lastly we finish by describing how we use the processed signals to calibrate a wavefront sensor and build the reconstructor matrix that allows us measure a wavefront of arbitrary phase error. 
-
-
- \section{Introduction to Adaptive Optics}
- 
-%Adaptive optics systems correct for the blurring of Earth's atmosphere in real time.
-Adaptive optics systems operate under the concept of conjugate imaging. A layer of atmospheric turbulence is imaged to conjugate planes in the optical system. At these planes the deformable mirror and wavefront sensor is placed, so that the correction is applied at the same plane it is measured. Figure \ref{fig:AOdiagram} shows an overview of an AO system. Light from a beacon, usually a star in astronomical adaptive optics, is measured by a wavefront sensor and an estimate of the wavefront is reconstructed by a low latency real time control software. The conjugate shape of the measured phase error is applied to the surface of a deformable mirror (DM) to correct the wavefront. In the next time step the wavefront sensor sees a phase that is from the combination of atmosphere and DM correction and a closed loop feedback system is formed. 
-
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/Adaptive-Optics-System.png}
-    \caption{Diagram of an adaptive optics closed loop,(\cite{suarez2017approach}). Light from the telescope is first read into the wavefront sensor. A control system uses that signal to compute the commands to drive the deformable into the shape that will correct the wavefront. The result is a corrected wavefront.}
-    \label{fig:AOdiagram}
-\end{figure}
-
-
-In astronomy there are different types of adaptive optics systems developed to maximize correction for different objects. Ground Layer Adaptive Optics (GLAO) systems such as ARGOS (\cite{rabien2019argos}) at the LBT, and 'Imaka (\cite{abdurrahman2018improved}) at the University of Hawaii 2.2 meter telescope compensate ground layer turbulence to produce a uniform correction across a greater than 1 arcmin field of view. Multiconjugate Adaptive Optics (MCAO) systems like the Gemini Multiconjugate Adaptive Optics System (\cite{neichel2014gemini}) have multiple deformable mirrors and wavefront sensors conjugated to layers of atmospheric turbulence at different altitudes. MCAO systems provide well corrected PSFs over a large field of view. Extreme adaptive optics systems (ExAO) are adaptive optics systems optimized for excellent wavefront correction of an on-axis guide star at the spatial frequencies of the inner working angle of a coronagraph. 
-
-
-Wavefront sensors have different sensitivities to phase errors of different spatial frequencies. In ExAO we need a wavefront sensor that is highly sensitive across all spatial frequencies to maximize light suppression by the coronagraph, and reduce high spatial frequency speckle noise in short exposure images. In an ideal adaptive optics system the dominating source of noise on the wavefront sensor measurement is photon noise. The value $\beta_p$ is used quantify the sensitivity to photon noise of a wavefront sensor. Figure \ref{fig:guyon2005} plots $\beta_p$ as a function of spatial frequency for different types of wavefront sensors. The most sensitive wavefront sensor is the Zernike wavefront sensor (ZWFS), that has a $\beta_p=1$ across all spatial frequencies, and the unmodulated pyramid wavefront sensor (FPYRWFS) is a close second with a $\beta_p=\sqrt{2}$ at all spatial frequencies. These wavefront sensors suffer from a lack of dynamic range. Phase errors from the turbulent atmosphere vary in strength, and large phase errors cause the signals from the Zernike and Pyramid wavefront sensors to become nonlinear. The pyramid wavefront sensor has the option of modulation which increases the linearity of signal at the cost of sensitivity. The ability to balance the sensitivity and dynamic range with the pyramid makes it robust to different seeing conditions and is ideal for ExAO wavefront sensing. 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/Guyon2005.png}
-    \caption{Value of $\beta_p$ as a function of angular separation for the WFSs compared in this study. The WFSs were optimized for a separation of 0.5 arcseconds. For the SHWFS, $r_0 = 0.2m$ and $\lambda_0 = 0.5\mu m$, (\cite{guyon2005}).}
-    \label{fig:guyon2005}
-\end{figure}
-
-
-
-The GMT, the Thirty Meter Telescope (TMT), (\cite{chisholm2020thirty}), and the European Extremely Large Telescope (E-ELT) ,(\cite{ramsay2020eso}), all have ExAO instruments planned that use pyramid wavefront sensors. The Planetary Systems Imager,  (\cite{fitzgerald2019planetary}) for the TMT will use a non-modulated pyramid wavefront sensor, (\cite{guyon2018wavefront}), in combination with lower order wavefront control to reach and maintain high contrast. The Multi-AO Imaging Camera for Deep Observations (MICADO),(\cite{davies2018micado}) for the ELT is a pathfinder instrument for performing high contrast imaging on ELTs. The Giant Magellan Extreme Adaptive Optics System (GMagAO-X),(\cite{males2019gmagao}), is being developed as a first light ExAO instrument for the GMT and will use a pyramid wavefront sensor. 
-
-
-
-
-
-% There are a number of ExAO instruments in operation on current generation telescopes. Current instruments include Subaru Coronagraphic Extreme Adaptive Optics instrument (SCExAO) (\cite{currie2020sky}), the Spectro-Polarimetric High-contrast Exoplanet Research instrument `(SPHERE)\cite{otten2020direct}, the Gemini Planet Imager (GPI) (\cite{chilcote2020gpi}), and most recently the Magellan Extreme Adaptive Optics System (MagAO-X) (\cite{males2020magao}). All of these instruments have common features: a high actuator count deformable mirror running at extreme speeds (greater than 1kHz), a high performance wavefront sensor, and a high contrast coronagraph.
-
-
-
-
-\subsection{The Strehl Ratio}
-
-An adaptive optics system compensates phase errors to return the resolution of the system to the diffraction limit of the telescope. The correction is not perfect, and we are interested in measuring the performance of the AO system. The Strehl ratio relates the residual uncorrected phase errors to the AO corrected PSF. The Strehl ratio is defined as,
-
-\begin{equation}
-    S \cong e^{-\sigma^2}
-\end{equation}
-where $S$ is the Strehl ratio, and $\sigma^2$ is the residual RMS phase error. A well corrected system is considered to have a Strehl ratio greater than 0.8. A poorly corrected system has a Strehl ratio less than 0.3.  The Magellan Extreme Adaptive Optics System (MagAO-X) is designed achieve Strehl ratios of greater than 70$\%$ with raw contrast of less than $10^{-4}$ at separations between 1 and 10 $\lambda/D$, (\cite{males2018magao}).
-
-The measurement of the Strehl ratio for an AO corrected PSF is given in Equation \ref{Strehl}. The Strehl ratio is calculated by taking the ratio of the peak intensity of the partially corrected PSF, $P_{data}$,  to the peak intensity of an aberration free PSF, $P_0$. The peaks are normalized by the flux in the image. A simulated model can be used for the aberration free image. 
-
-\begin{equation}
-    S=\frac{P_{data}/Flux_{data}}{P_{0}/Flux_{0}}
-    \label{Strehl}
-\end{equation}
-
 
 
 
@@ -69,6 +11,8 @@ The measurement of the Strehl ratio for an AO corrected PSF is given in Equation
 
 
 \section{The Pyramid Wavefront Sensor}
+
+The GSMTs all plan to use pyramid wavefront sensors (PWFS) in ExAO instruments. The PWFS acts like a Foucault test in 2 dimensions. Light from the telescope is focused onto a glass pyramid tip where it is split and then the pupil plane is reimaged onto a detector. The result is copies of the telescope pupil that contain intensity fluctuations that are related to the wavefront phase. All current PWFS on telescopes use a four-sided pyramid (4PWFS), resulting in four pupil copies. The Planetary Systems Imager, (\cite{fitzgerald2019planetary}), for the TMT will use a non-modulated PWFS, (\cite{guyon2018wavefront}), in combination with lower order wavefront control to reach and maintain high contrast. The Multi-AO Imaging Camera for Deep Observations (MICADO), (\cite{davies2018micado}), for the E-ELT is a pathfinder instrument for performing high contrast imaging on GSMTs that uses a PWFS. The High Angular Resolution Monolithic Optical and Near-infrared Integral field spectrograph (HARMONI),(\cite{neichel2016adaptive}), also for the E-ELT has a PWFS in the single conjugate adaptive optics (SCAO) mode to deliver diffraction limited performance for the E-ELT's core spectroscopic capability. The Giant Magellan Extreme Adaptive Optics System (GMagAO-X), (\cite{males2019gmagao}) is being developed as a first light ExAO instrument for the GMT and will use a PWFS. 
 
 
 The optical design of the PWFS consists of four components: a focusing optic, the glass pyramid, and a relay lens to image the pupils on the detector.\cite{ragazzoni2002pyramid} Figure \ref{fig:pyramid} shows a schematic of the operation of a PWFS.  The starlight is first brought to a focus on the tip of a glass pyramid that splits the focal plane into parts. The apex angle of the pyramid imparts a tilt to separate each of the sections. The result is copies of the telescope pupil that are separated spatially on a detector. The number of pixels across each pupil determines the number of modes the instrument is sensitive to. Current on-sky adaptive optics systems that have a PWFS use a four-sided PWFS. The Magellan Adaptive Optics System (MagAO)\cite{close2018status}, the Large Binocular Telescope Interferometer (LBTI)\cite{esposito2011adaptive}, and MagAO-X use an achromatic double four-sided pyramid. The SCExAO instrument uses two crossed roof prisms as its pyramid optic. The PWFS is highly sensitive but suffers from low dynamic range. A modulator is used to increase the linear range of the PWFS. Modulation is achieved by oscillating a piezo-actuator driven mirror to drive the PSF on the pyramid tip into a circular pattern with a radius quoted in units of $\lambda/D$, where $\lambda$ is wavelength, and $D$ is the diameter of the entrance pupil. This increases the effective spot size on the pyramid tip which increases the sensor's linearity at the cost of sensitivity.\cite{guyon2005}  
