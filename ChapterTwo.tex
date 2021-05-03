@@ -1,421 +1,318 @@
-\chapter{Analysis of the PWFS Signals}\label{CH2}
-%Babcock. Summary of some on sky systems. 
+\chapter{The Telescope Signal}\label{CH2}
 
-A key component of an ExAO system is the WFS, which measures aberrations from atmospheric turbulence.  A common choice in current and next generation instruments is the pyramid wavefront sensor (PWFS). The PWFS is a highly sensitive wavefront sensor that is able to measure the wavefront at high speed. The sensitivity and linear range of the PWFS can be tuned by dynamic modulation, making the PWFS robust to different seeing conditions. 
-\section{The Pyramid Wavefront Sensor} 
-The optical design of the PWFS consists of four components: a focusing optic, the glass pyramid, and a relay lens to image the pupils on the detector.\cite{ragazzoni2002pyramid} Figure \ref{fig:pyramid} shows a schematic of the operation of a PWFS.  The starlight is first brought to a focus on the tip of a glass pyramid that splits the focal plane into parts. The apex angle of the pyramid imparts a tilt to separate each of the sections. The result is copies of the telescope pupil that are separated spatially on a detector. The number of pixels across each pupil determines the number of modes the instrument is sensitive to. Current on-sky adaptive optics systems that have a PWFS use a four-sided PWFS. The Magellan Adaptive Optics System (MagAO)\cite{close2018status}, the Large Binocular Telescope Interferometer (LBTI)\cite{esposito2011adaptive}, and MagAO-X use an achromatic double four-sided pyramid. The SCExAO instrument uses two crossed roof prisms as its pyramid optic. The PWFS is highly sensitive but suffers from low dynamic range. A modulator is used to increase the linear range of the PWFS. Modulation is achieved by oscillating a piezo-actuator driven mirror to drive the PSF on the pyramid tip into a circular pattern with a radius quoted in units of $\lambda/D$, where $\lambda$ is wavelength, and $D$ is the diameter of the entrance pupil. This increases the effective spot size on the pyramid tip which increases the sensor's linearity at the cost of sensitivity.\cite{guyon2005}  
+ The goal of an adaptive optics (AO) system is to correct for the aberrations caused by atmospheric turbulence. It is important to first understand what image we would expect on our detector for a perfectly corrected diffraction-limited system. In this chapter, we will use radiative transfer and diffraction to determine what the intensity pattern on our detector will be from a star, and an estimate of the number of photons we can expect from a star of a given magnitude. We then describe photon noise, which affects AO system performance, and influences how the AO system is operated on-sky. The point spread function (PSF) of a diffraction-limited system is then described, and we investigate how aberrations from turbulence degrade the PSF. Lastly, we describe the basic operation of an AO system and how it is used to compensate for atmospheric turbulence.
+
+\section{Estimating the Photon Count}\label{phcount}
+
+We model light as an electromagnetic wave, with a characteristic complex amplitude $A$, wavelength $\lambda$, direction $\hat{a}$, and phase $\phi$. The phase is given by $\phi= \frac{2\pi}{\lambda}*OPD$, where OPD is the optical path difference. A wave with no aberrations has an OPD=0, and the phase term disappears. Light traveling from infinity, like that of stars, is described by a plane wave $U=Ae^{i(k\dot r-\omega t+ \phi)}\hat{a}$. Light spans a spectrum of wavelengths that are broken up into categories based on different proprieties of the radiation at those wavelengths. The electromagnetic spectrum spans from $\lambda=10^{-12}$-m and smaller for gamma radiation, out to wavelengths of greater than $\lambda=10^{-1}$-m for radio waves. Adaptive optics systems are designed to work in the visible spectrum (380-nm to 700-nm) out to near-infrared (700-nm to 5-$\mu$m).
+
+
+
+Stars approximately exhibit black-body radiation, which is when the power spectrum of the emitted radiation has a characteristic shape determined by the temperature of the star. We can determine the expected number of photons on our telescope primary mirror from a star by integrating Plank's Law over a wavelength bandpass. Plank's Law gives the radiant exitance $[\frac{W}{sr*m^3}]$ of electromagnetic radiation emitted by a black-body in thermal equilibrium. We need the energy per unit area radiated by black-body, or the irradiance flux density $[\frac{W}{m^2}]$. To find the flux density we integrate the radiant exitance over a wavelength range and the unit solid angle. The irradiance flux density, $I_e$ is given by,
+
+\begin{equation}
+    I_e=\int_{0}^{2pi} d\phi \int_{0}^{\frac{\pi}{2}} \cos(\theta)\sin(\theta)d\theta \int_{\lambda_{min}}^{\lambda_{max}} \frac{2hc^2}{\lambda^5}\frac{1}{exp(\frac{hc}{\lambda k_B T})-1} d\lambda
+\end{equation}
+
+where $c$ is the speed of light, $k_B$ is the Boltzmann constant, and $h$ is Planck's constant. We have now calculated the irradiance leaving the star, but we need to know the irradiance arriving on Earth. To find this we perform an intermediate step by using the irradiance flux density to calculate the luminosity of the star, $L_{\star}$ [W].
+
+\begin{equation}
+    L_{\star}=I_e*4\pi r_{star}^2
+\end{equation}
+
+The luminosity can then be used to find the irradiance from the star at Earth, which astronomers call the flux $F_{E}$.
+
+\begin{equation}
+    F_{E}=\frac{L_{\star}}{4\pi r_{E}^2}
+\end{equation}
+
+Where $r_{E}$ is the distance from the source to Earth. Typically we do not need this full calculation to find the flux. Stars are cataloged on an apparent magnitude scale. We can link a star's magnitude to the flux according to Equation \ref{magnitude}, compared to a reference star of known flux and magnitude. Vega is a common flux zero-point star, and there are look-up tables of flux values of Vega at different wavelength bandpasses. 
+
+\begin{equation}
+    m_1-m_2=
+    2.5 \log\left(
+        \frac{f_1}{f_2}
+    \right)
+    \label{magnitude}
+\end{equation}
+
+ We multiply the flux by the surface area of the primary mirror of the telescope to find the power which is defined as the collected energy per second
+
+\begin{equation}
+    P=F_{E}*\pi*r_T^2
+\end{equation}
+
+The estimated Energy [J] of a photon in the observed bandpass is given by,
+
+\begin{equation}
+    E=\frac{hc}{\lambda}
+\end{equation}
+
+where $\lambda$ is the mean wavelength in the bandpass. Dividing the power by the energy of a photon gives the number of photons incident on our telescope per second.
+
+\begin{equation}
+    N_p=\frac{P}{E}
+\end{equation}
+
+This is an ideal estimate, as it assumes all photons from the star in that bandpass reach the instrument. The actual Flux incident on the telescope includes factors to account for the transmission of Earth's atmosphere, the transmission of all the optical components in the system, and the detector efficiency. 
+
+
+\section{Photon Noise}
+
+The counting of photons is a random process described by the Poisson distribution. The error on the measurement of photon count is called photon noise and is the dominant error in a pyramid wavefront sensor error budget. Suppose we are counting photons over a time $T$, in discrete intervals $dt$. The photon rate of emission by the source is $v$, in units of [photons/second]. The average number of photons counted is $<m>=T/dt * vdt=Tv$. The probability of counting $m$ number of photons in the time interval $T$ is,
+
+\begin{equation}
+    P(x)=\frac{e^{-Tv} (Tv)^m}{m!}
+\end{equation}
+
+\noindent which is the Poisson distribution. The variance of values in the Poisson distribution is $\sigma^2=m$, and the standard deviation is $\sigma=\sqrt{m}$. 
+
+A pyramid wavefront sensor measures the wavefront error using the intensity on a detector. As the number of photons incident on the detector increases, the Poisson distribution approaches a Normal distribution via the central limit theorem. The noise on a measurement from a Poisson distribution is the square root of the total number of photons counted, $\sigma_I=\sqrt{N}.$ This uncertainty in our photon count directly corresponds to an uncertainty in the measurement of the shape and amplitude of the wavefront aberration. In the linear regime we expect the error on the measured wavefront to follow the Poisson distribution as well because we are measuring wavefront error using intensity measurements. For each wavefront sensor there is a direct relationship between the photon noise and the error on the wavefront measurement, and we quantify it using the value $\beta_p $, (\citep{guyon2005}).
+
+\section{The Point Spread Function}
+
+ Geometric optics describes the propagation of light as rays and assumes one point in the object is mapped to one point in the image. In geometric optics, a perfect point source object would form a perfect point image \citep{hecht2002optics}. In reality, the size of an imaged point source is finite and determined by the diffraction of light from the size, shape, and power in the aperture of our system. Diffractive optics assumes that each point in the object emits a spherical wave, and the pattern at the observation point is determined by the interference of each of those wavelets \citep{goodman2005introduction}. There are approximations to the diffractive theory, and in this section, we assume the Fraunhofer approximation, which assumes the plane of observation is in the focal plane. The Fraunhofer equation to find a field $U_z$ given a starting field $U_0$ with aperture function $T_{ap}$ is given by equation \ref{Fraunhofer}.
+
+\begin{equation}
+U_z=\frac{e^{ikz}}{ikz}e^{i\frac{\pi (x^2+y^2)}{\lambda z}}\int_{\infty} U_0(\xi,\zeta)T_{ap}e^{\frac{-2\pi i(x\xi+y\zeta)}{\lambda z}}d\xi d\zeta
+\label{Fraunhofer}
+\end{equation}
+
+The values $\xi$ and $\zeta$ are the spatial frequencies associated with the spatial coordinates x and y. The Fraunhofer diffraction equations calculate the Fourier transform of the field times the aperture function.
+
+A light wave consists of oscillating electric and magnetic fields. In diffraction theory, we consider the propagation and diffraction of the electric field component, and refer to it simply as `the field'. The methodology of solving diffraction problems is to start with a source, propagate the wavefront from the source to the plane of diffraction to find $U^-$, the field just before the aperture. We then solve for $U^+$ the field after the aperture and then apply Fraunhofer diffraction to find $U_z$, the field at the observation plane some far distance $z$ from the aperture. If the source is a perfect point source the field at the focal plane of the imaging system is defined as the point spread function (PSF)
+
+To start we assume that a star is far enough away to be considered a point source. Point sources emit spherical waves, but a point source at a great enough distance that we can approximate the arriving wave as a plane wave given by $U^-$ when it reaches the aperture.The telescope aperture is the diffractive plane in the system and can be modeled as a circular binary mask. The electric field after diffraction through the aperture is $U^+$ and is propagated to find the electric field at the image plane $U_z$. A diagram of this set up is given in Figure \ref{fig:propagation}. 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\textwidth]{Chapter Materials/Chapter Three Materials/pyramid.png}
-    \caption{Optical design of a PWFS. Light from the telescope is focused onto a glass pyramid tip where it is split and then the pupil plane is reimaged onto a detector. The result is copies of the telescope pupil that contain intensity fluctuations that are related to the wavefront phase. \cite{pyramidfig}}
-    \label{fig:pyramid}
+    \includegraphics[width=0.75\textwidth]{Chapter Materials/Introduction Materials/Introduction Figures/Propagation.png}
+    \caption{Propagation of light through an optical system. A point source at infinity results in a plane wave given by $U^-$ when it reaches the aperture. The electric field after light diffracts through the aperture is $U^+$ and is propagated to find the electric field at the image plane, $U_z$.}
+    \label{fig:propagation}
 \end{figure}
 
+$U_0^-$ is modeled as a perfect plane wave in this system. For a plane wave, we the phase term $\phi$ is equal to zero, and we set the amplitude of the wave equal to one. The result is that the electric field is $U_0^-=1$. The PSF is then the Fourier Transform of the aperture function. The aperture function of a telescope is modeled by a circle function with diameter D, $circ(\frac{\sqrt{x^2+y^2}}{D})$, which by has a known Fourier transform that can be solved for by defining $r=\sqrt{x^2+y^2}$ and $\rho=\frac{r}{\lambda z}$. The Fourier Transform of a circ function is:
 
-The intensity measured in the PWFS must be processed to infer the wavefront phase. First, the image is dark subtracted and gain corrected to remove detector artifacts. A threshold mask is then applied to mask out any pixels that do not contain a signal. The wavefront sensor response to a flat wavefront is subtracted off to leave only the intensity pattern caused by the wavefront phase error. The intensity in the pupils can be combined to estimate the wavefront derivative, or slope. We refer to this as the Slopes Maps (SM) calculation. The equation for the 4PWFS is,
+% \begin{equation}
+%     h_i(x_i)= \mathcal{F}^{-1}[H_f(\xi_f)] =
+%     % \frac{1}{2\pi} \int_{-\infty}^\infty e^{ i x \xi_f}
+%     % \left(
+%     %     \frac{1}{2} + \frac{1}{2} \mathrm{sgn}(\xi_f)
+%     % \right) d\xi_f
+%     % = 
+%     \frac{1}{2} \delta(-x_i) + \frac{i}{2\pi} \left(\frac{1}{x_i}\right)
+% \label{delta}
+% \end{equation}
 
+
+\begin{equation}
+    \mathcal{F}\left(circ\left(\frac{r}{D/2}\right)\right)=\pi{\left(\frac{D}{2}\right)}^2 \frac{J_1(\pi D \rho)}{\frac{D\rho}{2}}
+\end{equation}
+
+\noindent which is a sombrero function. The $J_1$ term is the Bessel function. The Fraunhofer diffraction of a plane wave through a circular aperture is, 
+
+% \begin{eqnarray}
+%     S_x=\frac{I_1+I_2-I_3-I_4}{I_1+I_2+I_3+I_4}     \label{4PWFSslopes} \\
+%     S_y=\frac{I_1-I_2-I_3+I_4}{I_1+I_2+I_3+I_4} \nonumber
+% \end{eqnarray}
 
 \begin{eqnarray}
-    S_x=\frac{I_1+I_2-I_3-I_4}{I_1+I_2+I_3+I_4}     \label{4PWFSslopes} \\
-    S_y=\frac{I_1-I_2-I_3+I_4}{I_1+I_2+I_3+I_4} \nonumber
+   U_z=A\left(\frac{e^{ikz}}{ikz}\right)\left(e^{i\frac{\pi r^2}{\lambda z}}\right)\int_{\infty} circ\left(\frac{r}{D/2}\right)e^{\frac{-2\pi i (r \rho )}{\lambda z}}rdrd\phi= \\
+   \left(\frac{e^{ikz}}{ikz}\right)\left(e^{i\frac{\pi r^2}{\lambda z}}\right) {\left(\frac{\pi D}{2}\right)}^2 \frac{J_1 (\frac{\pi Dr}{\lambda z})}{\frac{Dr}{2\lambda z}} \nonumber
 \end{eqnarray}
 
-where $S_x, S_y$ are the local wavefront slopes in the x and y direction, and $I_1...I_4$ are the intensity values of the pixel corresponding to the same location in each pupil. The intensity patterns in the pyramid pupils contain both the X and Y spatial information of wavefront gradient from the diffraction off of the pyramid edges. The Raw Intensity (RI) signal processing method uses the pyramid signal as-is. The benefit of the Raw Intensity method is that it is relatively unaffected by alignment errors. The major challenge in using this technique is obtaining a good flat wavefront reference image. The signals in the pyramid pupils are then extracted into a single column vector of intensity values.
+\noindent or,
 
-All current PWFSs on telescopes use a 4PWFS. ExAO systems need high sampling of the PWFS pupils to optimize performance, and as a result require larger detectors. Detector size, speed, and noise all impose limits on wavefront sensor designs and limit the performance of an GSMT-ExAO system. We are interested in exploring the 3PWFS as an alternative PWFS for an ELT-ExAO wavefront sensor to overcome these limitations. The 3PWFS only has three copies of the pupil and therefore uses fewer detector pixels than the 4PWFS and should be less sensitive to read noise. We assess the performance of the 3PWFS compared to the 4PWFS in simulation to determine if the 3PWFS does outperform the 4PWFS when using high read noise detectors.
+\begin{equation}
+    U_z=A \left(\frac{e^{ikz}}{ikz}\right)\left(e^{i\frac{\pi r^2}{\lambda z}}\right) {\left(\frac{\pi D}{2}\right)}^2 \text{somb}\left(\frac{2r}{\lambda z}\right)
+\end{equation} 
 
-To assess the performance of the 3PWFS compared to the 4PWFS, a simulation was developed using the Object Oriented Matlab Adaptive Optics toolkit (OOMAO) \cite{OOMAO}. The OOMAO toolkit is an end-to-end adaptive optics model that can simulate different combinations of guide stars, turbulent atmospheres, wavefront sensors, deformable mirrors, and science cameras. Light is propagated using Fraunhofer diffraction. The PWFS is simulated using a single tip/tilt phase mask that is segmented into N parts. Figure \ref{fig:oomaoFigs}.A and \ref{fig:oomaoFigs}.C show the masks for the 3PWFS and 4PWFS. The masks are scaled and rotated according to a user input for rotation and pyramid apex angle that controls the separation of the pyramid pupils. After scaling, the mask is converted into a phase mask that is applied at the focal plane to simulate a pyramid tip. Figure \ref{fig:oomaoFigs}.C and \ref{fig:oomaoFigs}.D show the resulting pyramid pupils on the simulated wavefront sensor camera, using a flat wavefront and 5 $\lambda/D$ modulation. The master OOMAO toolbox simulates a 4PWFS using Slopes Maps. We extended the PWFS class in OOMAO to include a 3PWFS, taking care that the amplitude of the tip/tilt phase in the 3PWFS phase screen generation matched that of 4PWFS. We included our derivation of the Slopes Maps equation for the 3PWFS (derived in Section~\ref{SlopesDerivation} below), and added the Raw Intensity method for both the 4PWFS and the 3PWFS. For both the Slopes Maps and Raw Intensity method the signal was normalized by the mean value across all valid pixels on the wavefront sensor detector, instead of normalizing pixel by pixel. 
+\noindent The intensity is the modulus squared of the field,
+
+\begin{equation}
+    I(r)=A^2 {\pi^2\left(\frac{D}{2}\right)}^4 \text{somb}^2\left(\frac{2r}{\lambda z}\right)
+\end{equation}
+
+\noindnet which is the Airy pattern as shown in Figure \ref{fig:Airy}.A. Figure \ref{fig:Airy}.B is the profile plot of the Airy pattern in log scale. Most of the intensity in the Airy pattern is concentrated in the core. For more complicated apertures the PSF can be calculated in simulation by modeling the aperture as a binary mask and taking the 2D Fourier transform. The simulation can also include the calculations from Section \ref{phcount} by setting the sum of the intensity in the image to the estimated number of photons.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{Chapter Materials/Chapter Two Materials/oomaoFigs.png}
-    \caption{Details of the simulated PWFS in OOMAO. A) and B) The simulated 3PWFS and 4PWFS pyramid masks in OOMAO. These masks are used as a phase screen in the pupil plane to emulate the focal plane splitting and separation done by a real glass pyramid. C) and D) The pupils from the 3PWFS and 4PWFS respectively on the simulated detector. In OOMAO the user can change the size, separation, and intensity values of the pupils through user defined inputs.}
-    \label{fig:oomaoFigs}
+    \includegraphics[width=0.5\textwidth]{Chapter Materials/Chapter Two Materials/airypatterns.png}
+    \caption{A. Airy pattern generated in simulation from the diffraction of a circular aperture. B. Profile plot of the Airy pattern in log scale. Most of the intensity in the Airy pattern is concentrated in the core.}
+    \label{fig:Airy}
 \end{figure}
 
-
-\section{Diffraction Theory of the Foucault Test}\label{diffraction}
-\subsection{Derivation of Expected Signal from the Foucault Test}
-  The PWFS is an extension of the knife edge test: each of the pyramid pupils are the signal from a knife edge test, but include a mirroring effect of the signal across the facets. The underlying physical processes of the pyramid and the knife edge are the same, so we can use the equations that describe the knife edge test explore the operation of the PWFS. The diffraction theory of the PWFS has been studied in detail. Vérinaud\cite{verinaud2004nature} extends the knife edge diffraction theory to model the signal of a roof sensor with dynamic circular modulation. Hutterer et. al.\cite{hutterer2019real} extends the knife edge analysis into general operators such that modulations of any pattern can be modeled. Shatokhina et. al.\cite{shatokhina2014fast} presents simplified equations to approximate pyramid signals with and without modulation. Correia et. al.\cite{correia2020performance}, and Fauvarque et. al.\cite{fauvarque2019kernel} model the pyramid operation as a Fourier filter. In this paper we use a formalism similar to Vérinaud, but limit our analysis to that of a one dimensional knife edge test for simplicity. We use the knife edge analysis to derive the relationship of the PWFS sensitivity to Fourier modes. Fourier modes have a direct relationship to locations on the focal plane; which is important to coronagraphy because we are trying to maximize the contrast in the dark hole region created by the coronagraph.
- 
- In this section we consolidate the diffraction theory of the knife edge test by Linfoot\cite{linfoot1948theory}, Katzoff\cite{katzoff1971quantitative}, and Wilson\cite{wilson1975wavefront} into a single derivation with uniform notation. Expanding upon their results, we link phase aberrations in the shape of Fourier modes to intensity patterns produced by the knife edge test. We assume a focal plane bisected by a binary amplitude mask representing the knife edge. 
- 
- Figure \ref{fig:derivationFlow} describes the steps taken in this derivation. The diagram is in two dimensions for visualization, but in this derivation we assume a one dimensional case for simplicity. We start with an electric field in the entrance pupil, $u_0(x_0)$ that has a phase error given by $\cos(nx)$. A Fourier transform is taken to the focal plane where the knife edge, $H_f(\xi_f)$ is applied. We don't actually solve for $U(\xi_f)$, the electric field in the focal plane, and instead take an inverse Fourier transform to the conjugate pupil plane where the knife edge test signal is found. The electric field at this pupil plane is given by $u(x_i)$, is the convolution of the electric field in the entrance pupil propagated to this pupil plane, $u_0(x_i)$, and the inverse Fourier transform of the knife edge, $h_i(x_i)$. The phase error in the electric field is expanded in a power series, then linearized, and the modulus squared is taken to find the field intensity. By subtracting off the constant term, we are left with the intensity pattern due to only the phase errors. 
- 
- 
- 
- \begin{figure}
-     \centering
-     \includegraphics[width=0.9\textwidth]{Chapter Materials/Chapter Two Materials/DerivationFlow.png}
-     \caption{Diagram of the steps taken in the derivation. The entrance pupil with electric field $u_0(x_0)$ is Fourier transformed to the focal plane. At the focal plane the knife edge by multiplying the binary mask function of the knife edge, $H_f(\xi_f)$, by the Fourier transform of the electric field in the entrance pupil. An inverse Fourier transform taken to return to the pupil plane where the pyramid signal is detected.}
-     \label{fig:derivationFlow}
- \end{figure}
- 
- 
-
-
-% To start, we define some terms used in the derivation. 
-
-% \begin{center}
-%     \begin{tabular}{ | l |p{12cm}|}
-%     \hline
-%     $u_0(x_0)$ & Complex wavefront at the "phase object". This could be the surface of a mirror under testing, but for our application it is the phase errors in the pupil caused by atmospheric turbulence. \\ \hline
-%     $u_i(x_i)$ & Complex wavefront at the image plane. For the pyrmaid wavefront sensor the image plane is the pupil plane. \\ \hline
-%     $h(x_i)$ & The impulse response of the system. \\ \hline
-%     $m(x)$ & The equation of phase error to be measured. $u(x)=exp(-2\pi i m(x))$  \\ \hline
-%     $p(x_i )$ & The intensity pattern at the image plane due to the diffraction of the electric field with the knife-edge \\ \hline
-%     \end{tabular}
-% \end{center}
-
-To start we define the electric field in the entrance pupil as $u_0(x_0)$. We take the Fourier transform the of the electric field to get to the focal plane, where we will apply the knife-edge. The Fourier transform is here defined as,
+The PSF constrains the angular resolution of the imaging system which is defined by:
 
 \begin{equation}
-    \mathcal{F}\{\xi_x\}=\frac{1}{2\pi}\int_{-\infty}^\infty e^{-i x \xi_x} f(x) dx
-    \label{FourierT}
+    \theta=\frac{\lambda}{D}
+    \label{res}
 \end{equation}
-
-where $\xi_x$ is the spatial frequency corresponding to the spatial coordinate $x$. $\mathcal{F}\{\cdot\}$ denotes the Fourier transform operator, and  $\mathcal{F}^{-1}\{\cdot\}$ will denote its inverse. The equation of the electric field in the focal plane, $U(\xi_f)$ is:
+ 
+Two objects are considered resolved if they are at least $\frac{ \lambda}{D}$ in separation. To find the physical spot size on a detector we multiply by the effective focal length.
 
 \begin{equation}
-    U (\xi_f)=U_f(\xi_f)H_f(\xi_f)
-    \label{FT}
+S=\frac{ \lambda F}{D} = \lambda F_\#
 \end{equation}
 
-where,
-% We now multiply the transmission function of the knife edge, $H(\xi_x)$. In this derivation we assume that the knife edge is like a step function, the transmission of light is 1 until the edge of the knife edge is reached and then drops to zero. We assume for simplicity that the aperture is infinite, but that the knife edge eclipses half of it. After multiplication, the Fourier transform of equation must be taken again to calculate the electric field in the pupil plane. We write out the step function in terms of the sign function $sgn(\xi_x)$, in order to calculate the Fourier Transform easily. The transfer function of the knife edge is given by the following equation.
+\noindent. As an example for the CACTI testbed described later in Chapter \ref{CH6}, the focal length of the off-axis parabolic mirrors are 375.25-mm. The beam diameter is 7.5-mm, and the wavelength of the laser source is 633-nm. The physical spot size of the CACTI PSF is:
+
+\begin{equation}
+S=\frac{ (633*10^{-6})(375.25)}{7.5} = 0.032-mm.
+\end{equation}
+
+\subsection{Aberrations}
+
+Aberrations degrade the image quality of an optical system. They can arise from imperfect manufacturing of optics, misalignment in the optical system, and turbulence from the atmosphere. The optical path difference (OPD) is the deviation of the wavefront from a perfect reference which is illustrated in Figure \ref{fig:OPD}. OPD is measured in units of length and is related to the wavefront error that has units of radians by:
+
+\begin{equation}
+    \sigma= \frac{2\pi OPD}{\lambda}.
+\end{equation}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Chapter Materials/Introduction Materials/Introduction Figures/OPD.png}
+    \caption{Diagram of a perfect reference wavefront compared to a aberrated wavefront. The difference in the two wavefronts is called the optical path difference (OPD).}
+    \label{fig:OPD}
+\end{figure}
+
+The OPD can be a complicated function, so we often describe the total wavefront error as a summation of modes in a basis set. A common basis set is the Zernike polynomials which are orthogonal over a unit circle. The Zernike Polynomial generating function is:
+
+\begin{equation}
+    \begin{split}
+        U_n^m(\rho,\phi)_{even}=R_n^m(\rho)\cos(m\phi) \\
+        U_n^m(\rho,\phi)_{odd}=R_n^m(\rho)\sin(m\phi)
+    \end{split}
+\end{equation}
+
+\noindent where $R_n^m(\rho)$ is,
+
 \[ 
-H_f(\xi_f)= 1/2+1/2\mbox{sgn}(\xi_f) \left\{
-\begin{array}{ll}
-      1 \: for \: \xi_f >0\\
-      0 \: for \: \xi_f <0\\
-      
+R_n^m(\rho)= \left\{
+\begin{array}{cr}
+       {\sum_{l=0}^{(n-m)/2} \frac{(-1)^l(n-l)!}{l!(\frac{1}{2}(n+m)-l)!(\frac{1}{2}(n-m)-l)!}\rho^{n-2l}} &  \mbox{for n-m even} \\
+        {0} &  \mbox{for n-m odd} \\
 \end{array} 
 \right. 
 \]
 
-is the binary mask function of the knife edge, and $U_f(\xi_f)$ is the Fourier transform of $u_0(x_0)$. Taking the inverse Fourier transform brings us to the conjugate pupil plane. The inverse Fourier transform of $H_f(\xi_f)$ is
+\noindent and $\rho$ and $\phi$ are the radial and azimuthal coordinates \citep{weisstein2002zernike}. The first few Zernike polynomials are given in Figure \ref{fig:zernikes} \citep{Hsieh:20}. To simulate a phase aberration, a summation of Zernike polynomials weighted by the amplitude is added into the pupil plane as a phase error and the resulting is distorted due to the wavefront error. Examples of the resulting PSF from different Zernike polynomial phase errors is shown in Figure \ref{fig:zernikePSFs} \citep{masalehdan2010modeling}.
 
-% \begin{equation}
-%      FT^{-1}[H(\xi_x)]=\frac{1}{2\pi}\int_{-\infty}^\infty e^{ i x \xi_x} ( \frac{1}{2}+\frac{1}{2}sgn(\xi_x)) d\xi_x \\
-%  =\frac{1}{2}\delta(-x)+\frac{i}{2\pi}(\frac{1}{x})
-% \label{delta}
-% \end{equation}
-
-\begin{equation}
-    h_i(x_i)= \mathcal{F}^{-1}[H_f(\xi_f)] =
-    % \frac{1}{2\pi} \int_{-\infty}^\infty e^{ i x \xi_f}
-    % \left(
-    %     \frac{1}{2} + \frac{1}{2} \mathrm{sgn}(\xi_f)
-    % \right) d\xi_f
-    % = 
-    \frac{1}{2} \delta(-x_i) + \frac{i}{2\pi} \left(\frac{1}{x_i}\right)
-\label{delta}
-\end{equation}
-
-
-%  = \frac{1}{2} \frac{1}{2\pi} \int_{-\infty}^\infty e^{- i x \xi_x}d\xi_x+\frac{1}{2} \frac{1}{2\pi}\int_{-\infty}^\infty e^{- i x \xi_x}sgn(\xi_x) d\xi_x
-% \end{align*}
-
-% We make use of the property of the delta function to solve for the Fourier Transform of $\frac{1}{2}$:
-
-% \begin{equation}
-%     \delta(x)=\frac{1}{2\pi}\int_{-\infty}^\infty e^{ i x \xi_x}d\xi_x
-% \end{equation}
-
-% which leads to,
-    
-% \begin{equation}
-%     \frac{1}{2}\delta(x)=\frac{1}{2}\frac{1}{2\pi}\int_{-\infty}^\infty e^{ i x \xi_x}d\xi_x 
-% \end{equation}
-
-% where $\frac{1}{2}\delta(x)$ is the Fourier Transform of $\frac{1}{2}$. To solve for the Fourier transform of $\frac{1}{2} sgn(\xi_x)$ function, we use the derivative property.
-
-% \begin{equation}
-%   FT[\frac{d g(x)}{dx}]=i2\pi \xi_x G(\xi_x)
-%   \label{derivativeProp}
-% \end{equation}
-
-% where the derivative of $\frac{1}{2} sgn(\xi_x)$ is $\delta(\xi_x)$. Plugging this into Equation~\ref{derivativeProp}, gives the result,
-% \begin{equation}
-%   FT[\frac{d sgn(\xi_x)}{d\xi_x}]=FT[\delta{\xi_x}]=1=2\pi i x G(x).
-% \end{equation}
-
-% Solving for $G(x)$,
-% \begin{equation}
-%  G(x)=\frac{1}{i2\pi x}.
-% \end{equation}
-
-% Now we can sum our answers to get the Fourier Transform of a step function.
-
-% \begin{equation}
-%  FT[step(\xi_x)]=\frac{1}{i2\pi x_i}+\frac{1}{2}\delta(x_i)
-%  \label{knifeedge}
-% \end{equation}
-
-We take the results of Equation~\ref{delta} and convolve it with $u_0(x_i)$, which is the Fourier transform of $U_f(\xi_f)$ in Equation~\ref{FT}, to get the electric field at the pupil plane, $u(x_i)$. The resulting equation is Equation 5a from Wilson.\cite{wilson1975wavefront}
-
-
-% \begin{equation}
-%   u_i(x_i)= u_0(x_0) \circledast \frac{i}{2\pi x_i}+\frac{1}{2}\delta(-x_i) 
-%  = \int_{-\infty}^\infty u_0(x')[\frac{1}{2}\delta(x'-x_i)+\frac{i}{2\pi}\frac{1}{x_i-x'}]dx' 
-% \end{equation}
-%  \begin{equation}
-%       u_i(x_i) =\frac{1}{2}u_0(x_i)+\frac{i}{2\pi}\int_{-\infty}^\infty \frac{u_0(x')dx'}{x_i-x'}
-%       \label{KEconv}
-%  \end{equation}
-
-\begin{equation}
-    u(x_i)= u_0(x_i) \circledast \left(
-        \frac{i}{2\pi x_i}+\frac{1}{2}\delta(-x_i)
-    \right)
-    =
-    \int_{-\infty}^\infty
-    u_0(x') \left[
-        \frac{1}{2}\delta(x'-x_i)+\frac{i}{2\pi}\frac{1}{x_i-x'}
-    \right] dx' 
-    \label{KEconv}
-\end{equation}
-
-The first modification to Equation~\ref{KEconv} by Wilson and Katzoff is to assume that the pupil has a finite aperture, resulting in the integral limits of -1 to 1. The following equations are equations 6 through 9 in Wilson's paper.\cite{wilson1975wavefront} For a perfect wavefront we assume $u_0 (x_i )=1$.  Wilson and Katzoff define $m(x)$ as the local mirror error in half-wavelengths, but for our application it would be the phase errors caused by atmospheric turbulence. Assuming an electric field with some phase error $m(x)$ we first expand the electric field as a Taylor series as follows,
-\begin{equation}
-    u_0 (x_i )=e^{(-2\pi i m(x_i ))}=1-2\pi i m(x_i )-2\pi^2*m^2 (x_i )+...
-    \label{taylorexp}
-\end{equation}
-and disregard all higher order terms. Substituting Equation~\ref{taylorexp} into Equation~\ref{KEconv} and simplifying gives:
-
-% \begin{equation}
-%     2\pi*u_i (x_i )=\pi[1-2\pi^2 m^2 (x_i )+2\int_{-1}^1\frac{m(x')}{x'-x_i} dx']
-% +i[-2\pi^2 m(x_i)+\int_{-1}^1\frac{dx'}{x'-x_i}-2\pi^2\int_{-1}^1\frac{m^2(x')}{x'-x_i}dx']
-% \end{equation}
-\begin{multline}
-    2\pi u(x_i ) = 
-    \pi 
-    \left[ 
-        1-2\pi^2 m^2 (x_i )+2\int_{-1}^1 \frac{m(x')}{x'-x_i} dx'
-    \right] \\
-    +   i \left[
-        -2\pi^2 m(x_i)+\int_{-1}^1\frac{dx'}{x'-x_i}
-        -
-        2\pi^2\int_{-1}^1\frac{m^2(x')}{x'-x_i}dx'
-    \right]
-\end{multline}
-
-
-
-The intensity in the image plane is the modulus squared of this expression, of which we keep only the linear terms:
-
-% As a side note the integral:$\int_{-1}^1\frac{dx'}{x'-x_i}$ is equal to $ln(\frac{1-x}{1+x})$.
-
-% \begin{equation}
-%     I(x_i)=\pi^2 + \ln^2(\frac{1-x}{1+x})+4\pi^2\int_{-1}^1\frac{m(x')}{x'-x_i} dx'-4\pi^2 m(x_i)\ln(\frac{1-x}{1+x})
-% \end{equation}
-\begin{equation}
-    I(x_i) = \pi^2 + \ln^2 \left(
-        \frac{1-x_i}{1+x_i}
-    \right)
-    +
-    4 \pi^2 \int_{-1}^1 \frac{m(x')}{x'-x_i} dx'
-    -
-    4\pi^2 m(x_i) \ln\left(
-        \frac{1-x_i}{1+x_i}
-    \right)
-\end{equation}
-
-The result contains two constant terms, which represent the intensity response $I_r(x_i )$, which is the reference intensity pattern resulting from a perfect wavefront propagated through the optical system. This can be subtracted out. The other two terms are dependent on the shape of the wavefront error. After subtracting  $I_r (x_i )$ and dividing by $4\pi^2$ we are left with the intensity pattern due to a pure phase error $I_p(x_i)$:
-
-% \begin{equation}
-%     p(x_i)=\frac{I(x_i)-I_0(x_i)}{4\pi^2}\int_{-1}^1\frac{m(x')}{x'-x_i} dx'-m(x_i)\ln(\frac{1-x}{1+x}).
-% \end{equation}
-
-\begin{equation}
-    I_p(x_i) = \left(\frac{I(x_i) - I_r(x_i)}{4\pi^2}\right)=
-     PV \int_{-1}^1 \frac{m(x')-m(x_i)}{x'-x_i}dx'
-\end{equation}    
-    % \int_{-1}^1\frac{m(x')}{x'-x_i} dx'
-    % -
-    % m(x_i)\int_{-1}^1\frac{dx'}{x'-x_i} 
-
-
-% Collecting all constant terms into $C$, we can combine the two terms above into a single equation.
-% \begin{equation}
-%     I_p(x_i)=C \left( PV \int_{-1}^1 \frac{m(x')-m(x_i)}{x'-x_i}dx'\right)
-% \end{equation}
-
-In this equation $PV$ stands for the principal value. The $PV$ is used to evaluate integrals that have a discontinuity, in our case this is when $x_i=x'$.\cite{johansson1999hilbert} This is the result found by Linfoot\cite{linfoot1948theory}, and is the equation currently used to describe the operation of the PWFS.\cite{verinaud2004nature} In high contrast imaging we are interested in the effect of phase errors at different spatial frequencies as these correspond to contrast at specific locations in the post-coronagraphic focal plane. Katzoff\cite{katzoff1971quantitative} showed that this equation accurately predicts the intensity pattern from phase errors that are described by a power series, $x^{N}$, but his solution to the expected intensity pattern due to phase errors in the form of sines and cosines does not match the signal from the PWFS. To find the response of a knife edge to an error of the form $\cos(nx)$, where $n$ is the spatial frequency, we need to modify the above derivation. In this derivation we assume an infinite aperture approximation, and take the integral from $-\infty$ to $\infty$ instead of from -1 to 1. We start at Equation~\ref{taylorexp}, and consider only the linear component and substitute into Equation~\ref{KEconv}.  The electric field at the entrance aperture is now: 
-
-
-\begin{equation}
-    u_0(x_i )=\exp(-2\pi i m(x_i ))=1-2\pi i m(x_i).
-    \label{EF}
-\end{equation}
-
-We substitute Equation~\ref{EF} into Equation~\ref{KEconv} to find the electric field in the pupil plane $u(x_i)$, which yields:
-
-\begin{equation}
-    u(x_i)= \frac{1}{2}(1-2\pi i m(x_i))+\frac{i}{2\pi}\int_{-\infty}^\infty \frac{(1-2\pi i m(x'))dx'}{x_i-x'}
-    \label{HT}
-\end{equation}
-
-Expanding the integral, we have:
-\begin{equation}
-    u(x_i)= \frac{1}{2}(1-2\pi i m(x_i))+\frac{i}{2\pi}\int_{-\infty}^\infty \frac{dx'}{x_i-x'}+\int_{-\infty}^\infty \frac{ m(x')dx'}{x_i-x'}
-\end{equation}
-
-where the integrals are now in the form of a Hilbert transform.\cite{villa2014foucault} The Hilbert transform is defined as:
-
-\begin{equation}
-    H(y(t))=\frac{-1}{\pi} PV\int_{\infty}^{\infty} \frac{y(t') dt'}{t'-t}
-\end{equation}
-
-which has the property that the Hilbert transform of a constant is 0.\cite{poularikas2018handbook} When the wavefront error is given by $m(x)=\cos(nx)$, Equation~\ref{HT} becomes, 
-
-
-\begin{equation}
-    u(x_i)= \frac{1}{2}(1-2\pi i \cos(nx_i))+\int_{-\infty}^\infty \frac{ \cos(nx')dx'}{x_i-x'}
-\end{equation}
-
-To get the integral in the form of a Hilbert transform we multiply by $\frac{\pi}{\pi}$. The Hilbert transform of $H(\cos(nx))=\cos(nx+\frac{\pi}{2})=-\sin(nx)$.
-
-\begin{equation}
-\int_{-\infty}^\infty \frac{ \cos(nx')dx'}{x_i-x'}=\pi*[\frac{1}{\pi}\int_{-\infty}^\infty \frac{ \cos(nx')dx'}{x_i-x'}]=-\pi \sin(nx_i)
-\end{equation}
-
-The equation for the electric field in the pupil plane of the knife edge signal is,
-
-\begin{equation}
-   u(x_i)= \frac{1}{2}-i \pi \cos(nx_i) -\pi \sin(nx_i)
-   \label{derivationResult}
-\end{equation}
-
-and we can now take the modulus squared to get the intensity.
-
-\begin{equation}
-    I(x_i)=\frac{1}{4}+\pi^2-\pi \sin(nx_i)
-    \label{equationIntensityResult}
-\end{equation}
-
-Subtracting the constant terms which represent the intensity response $I_r (x_i )$ to a perfect wavefront, gives the intensity pattern due only to phase errors. In this derivation we find an intensity pattern that is proportional to $-\sin(nx)$ resulting from a phase error of the form $\cos(nx)$. In the next section we demonstrate that this is the expected response.
-
-\subsection{Verification}
-
-The approximations we used to derive Equation~\ref{derivationResult} are supported by our simulation of the response of a PWFS to a cosine phase error. Using OOMAO we apply a Fourier mode as a phase error in the pupil plane, propagate through the pyramid onto the detector, and examine the resulting intensity pattern on the detector as well as the calculated slopes. The PWFSs are under $5 \frac{\lambda}{D}$ modulation to insure that the pyramid response is linear for the amplitude of Fourier mode applied, and we are not including any noise. We apply a Fourier mode phase error that is in the form of $\cos(3x)$ in the $x$-direction. The phase error in radians is shown in Figure \ref{fig:CosinePhaseDiagram}, where Figure \ref{fig:CosinePhaseDiagram}.A is the $\cos(3x)$ phase error, and Figure \ref{fig:CosinePhaseDiagram}.B is a cross section of the center function in the $x$-direction. We compare the resulting intensity patterns to our prediction in Equation~\ref{equationIntensityResult}. For an intensity pattern of the form $\cos(3x)$ shown in Figure \ref{fig:MathPredicions}.A, we would expect an intensity pattern in a pyramid pupil to be $1/4+\pi^2-\pi \sin(3x)$ displayed in Figure \ref{fig:MathPredicions}.B. After subtracting off constant terms we scale the amplitude of the signal such that the maximum value is 1, to compare the resulting pyramid signal is $-sin(3x)$ plotted in Figure \ref{fig:MathPredicions}.C.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Chapter Materials/Introduction Materials/Introduction Figures/zernikes.jpeg}
+    \caption{The first 15 Zernike polynomials.}
+    \label{fig:zernikes}
+\end{figure}
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/CosinePhaseDiagram.png}
-    \caption{A. Applied cosine phase error in radians in pupil plane to be propagated through the PWFS. B. Scaled cross section of the phase error.}
-    \label{fig:CosinePhaseDiagram}
+    \includegraphics[width=0.75\textwidth]{Chapter Materials/Introduction Materials/Introduction Figures/ZernikePSFs.png}
+    \caption{The resulting PSFs from different Zernike modal wavefront errors.}
+    \label{fig:zernikePSFs}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1\textwidth]{Chapter Materials/Chapter Two Materials/MathPredictions.png}
-    \caption{Predictions from the Foucault derivation. A. The applied $\cos(3x)$ phase error. B. The intensity pattern predicted for a single pupil. C. The expected pyramid signal after subtracting off constant terms and scaling.}
-    \label{fig:MathPredicions}
-\end{figure}
-
-The resulting intensity patterns from the 3PWFS and 4PWFS are shown in Figure \ref{fig:IntensityPatternsDiagram} A and B. In Figure \ref{fig:IntensityPatternsDiagram} C and D we take a cross section from one of the pupils from each wavefront sensor and scale the signal. We then plot this against the predicted scaled intensity pattern. We find that the mathematical prediction is a good match for the measured intensity pattern inside the pupil of a modulated pyramid when the signal is linear. 
+\section{Atmospheric Turbulence}
+%%%% 
 
 
-\begin{figure}
-    \centering
-\includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/IntensityPatternsDiagram.png}
-    \caption{Resulting intensity patterns on the PWFS detector from A. the 3PWFS, and B. the 4PWFS. Figures C. and D. are cross section of the intensity pattern plotted against the mathematical prediction. For C. The cross section was taken from center of the middle-left pupil. For D. The cross section was taken from the center of the top two pupils.}
-    \label{fig:IntensityPatternsDiagram}
-\end{figure}
+Earth’s atmosphere is divided into layers that have different temperatures. At the boundary between two layers, the temperature gradient causes a shearing effect that results in turbulence. The tropopause at a height of about 10-km contributes the largest effect of turbulence on image quality. We describe the structure of atmospheric turbulence using the Kolmogorov model. In this model, the turbulence is described as eddies that have a characteristic outer scale $L_0$ and dissipate heat by breaking into smaller and smaller turbulent cells. Each of these cells has a slightly different index of refraction, and the inhomogeneities in the refractive index impart phase errors on the wavefront. The term $r_0$ is the Fried parameter, and it is defined as the coherence length at which the wavefront error over a circle of radius $r_0$ is 1 radian \citep{roddier1999adaptive}. The Fried parameter is used to describe the strength of the distortion imparted by turbulence.  
 
-To gain further clarity we use the Slopes Maps equation that subtracts off the constant intensity and turns the signal into a pure X and Y measurement of phase. The Slopes Maps naturally subtracts the flat wavefront response and in that way is self-referencing.  More details on the Slopes calculation  for the 3PWFS is in Section~\ref{Slopes}. The Slopes Maps for the 3PWFS and the 4PWFS are shown in Figure \ref{fig:SlopesMapDiagram}, as well as the cross sections that are indeed a $-\sin(nx)$ function. 
+Turbulence is a statistical process and we are interested in determining the evolution of refractive index at a point $x$ and another point $\Vec{r}$ away. The variance of the difference between the values at these two points is the structure function \citep{hardy}. The structure function of the refractive index is given by the variance of the refractive index at points $x$ and $x+r$.   
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{Chapter Materials/Chapter Two Materials/SlopesMapsAndSlices.png}
-    \caption{A. and B. Calculated slopes from the pyramid pupils. C. and D. Cross section of the Slopes plotted against the predicted signal. }
-    \label{fig:SlopesMapDiagram}
-\end{figure}
+\begin{equation}
+    D_N(r)=<|N(x)-N(x,r)|^2>=C_N^2r^{\frac{2}{3}}
+\end{equation}
 
-The previous simulations were performed with $5\lambda/D$ modulation. We can consider the 0 modulation case, which is a more direct relation to the results from the derivation. The unmodulated PWFS signal is more nonlinear than the modulated pyramid and therefore the fit between the prediction and the measured signal will be poor. In the case of the Slopes Maps signal, we found in simulation that the self-referencing is degraded from a nonlinear signal, and to return to a closer estimate of the signal the flat wavefront reference signal should be subtracted off. The fit worsens for the Slopes Maps without reference subtraction when there is a misregistration of the pupils, as will always be the case for the 3PWFS. For the 3PWFS subtracting off a reference improved the mean square error of the fit of simulation to derivation by about a factor of two, from 0.216 without subtraction, to 0.098 in the reference subtracted case. Figure \ref{fig:Mod0} summarizes the findings from the simulations with 0 modulation. Figure \ref{fig:Mod0}.A and \ref{fig:Mod0}.B are the detector signal of the 4PWFS and 3PWFS to the $\cos(3x)$ phase error. Figure \ref{fig:Mod0}.C and \ref{fig:Mod0}.D are a cross section of the scaled Slopes Maps plotted against the predicted signal. Figure \ref{fig:Mod0}.E and Figure \ref{fig:Mod0}. F are cross sections of the Slopes Maps with the reference signal subtracted.
+The $C_N^2$ value describes the strength of turbulence as a function of altitude. The $C_N^2$ profile is unique to every observatory because of local topology and climate. The $C_N^2$ profile is used to calculate $r_0$ using:
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\textwidth]{Chapter Materials/Chapter Two Materials/Mod0PredictionVsSIm.png}
-    \caption{A. and B. The wavefront sensor detector signals. C. and D. cross section of the wavefront sensor Slopes Maps plotted against the prediction. E. and F. the cross section of the Slopes Maps with the reference signal subtracted.}
-    \label{fig:Mod0}
-\end{figure}
-
-The diffraction theory of the Foucault test predicts an intensity pattern that is the Hilbert transform of the wavefront phase. The result is an intensity pattern that is related to the wavefront derivative, but is not quite the derivative. In the case of a derivative wavefront sensor such as the Shack-Hartmann, the operation of the wavefront sensor on the phase to signal measurement is $\frac{d}{dx}\cos(nx)=-n\sin(nx)$. In the case of the pyramid the reference subtracted result is  $\frac{d}{dx}\cos(nx)=-\sin(nx)$, which is similar to the derivative wavefront sensor but without the scaling by spatial frequency. The result is that the knife edge and therefore the unmodulated pyramid sensitivity does not depend on spatial frequency, because all spatial frequencies will produce an equally strong signal. In the Shack-Hartmann case the strength of the signal scales linearly with spatial frequency.
-
-
-\section{3PWFS Slopes Maps}\label{Slopes}
-
-\subsection{Derivation}\label{SlopesDerivation}
-
-The Slopes Maps technique was derived for the 4PWFS using the same intensity centroid calculation as a Shack-Hartmann wavefront sensor. The Shack-Hartmann uses a quad-cell intensity calculation to track the movement of spots to calculate the X and Y gradient of the wavefront phase in post-processing. In the geometric optics approximation the PWFS acts as a slope sensor, and the Slopes Maps calculates the wavefront gradients in a similar way to the Shack-Hartmann. In the diffractive optics derivation, the wavefront slopes are calculated by the diffraction of the pyramid edges and encoded directly into the intensity pattern. We do not need to perform a Slopes Maps calculation for the pyramid signal because we are directly measuring a function that is related to the gradient phase error, but it is still beneficial to do so. The Slopes Maps is the natural recombination of the pyramid signals that subtracts off the constant Intensity pattern, so a reference image is not required. In a closed loop system the wavefront signal is driven towards  zero slope which arises when the PSF is centered on the pyramid tip with no phase errors. The Slopes Maps technique suffers from misalignments of the pyramid pupils; any misregistration in the sampling of the pupils with respect to each other results in a loss of performance. 
-
-The Slopes Maps for the 4PWFS is already known. In previous work by Costa \cite{buchler2004development}, a Slopes Map calculation for the 3PWFS was derived assuming a geometric optics approximation of the PWFS as a derivative wavefront sensor in the modulation regime. In this paper we introduce a new Slope Maps method to handling the 3PWFS signals, which is derived using the intensity centroid of an equilateral triangle.
-
-To calculate the Slopes Maps equations for the 3PWFS, we start from the same assumptions used for the 4PWFS. We assume that the maximum sensitivity of the sensor occurs when the PSF is centered at the tip of the four pyramid edges. We seek a Slopes Maps equation that drives the wavefront to zero slope, resulting in uniform intensity in the re-imaged pupils. To derive the centroid equation for the 3PWFS we start with an equilateral triangle, shown in Figure \ref{fig:triCentFig}. The center of the triangle is at the origin of a Cartesian coordinate system, and the vertices of the triangle are all an equal distance from the origin. The blue circles represent the layout of the pupils on the PWFS detector, and $I_1$ corresponds to $(x_1, y_1)$, etc. Solving for the coordinates $(x_1,y_1),(x_2,y_2), (x_3,y_3)$ gives the weights in the $S_x$ and $S_y$ Slopes Maps. 
-
-% We can see in Equation~\ref{4PWFSslopes} that when the pixel values are equal the value of the Slopes are zero.
-
-\begin{figure}
-\begin{center}
-\begin{tabular}{c}
-\includegraphics[height=5.5cm]{Chapter Materials/Chapter Two Materials/3PWFSslopesMap.png}
-\end{tabular}
-\end{center}
-\caption 
-{ \label{fig:triCentFig}
-Equilateral triangle with the center at the origin. Solving for the coordinates of the vertex points gives the weights for the pixel Intensities used in the Slopes Maps calculation. The blue circles represent the layout of the pupils on the detector. } 
-\end{figure} 
-
-For the 3PWFS we find that the $S_x$ and $S_y$ Slopes Maps are,
-% \begin{equation}
-%     S_x=\frac{\frac{\sqrt{3}}{2}I_2-\frac{\sqrt{3}}{2}I_3}{I_1+I_2+I_3}, \; \;
-%     S_y=\frac{I_1-\frac{1}{2}I_2-\frac{1}{2}I_3}{I_1+I_2+I_3}
-%     \label{3PWFSslopes}
-% \end{equation}
-
-\begin{eqnarray}
-    S_x=\frac{\frac{\sqrt{3}}{2}I_2-\frac{\sqrt{3}}{2}I_3}{I_1+I_2+I_3} \label{3PWFSslopes} \\
-    S_y=\frac{I_1-\frac{1}{2}I_2-\frac{1}{2}I_3}{I_1+I_2+I_3} \nonumber
-\end{eqnarray}
-
-The $S_x$ slopes maps in this orientation depends only on the intensities from the $I_2$ and $I_3$ pupil pixels which act as a roof sensor. The result is that care must be taken to properly index the pupils when applying the Slopes Map equation. 
+\begin{equation}
+    r_0=[(\frac{2\pi}{\lambda})^2 \int_0^{L_T} C_N^2(z)dz]^{\frac{-3}{5}}
+\end{equation}
  
- \subsection{Testbed Verification}
+ Where $L_T$ is the total path length of the observation. The Fried parameter scales as a function of wavelength, $r_0 \propto \lambda^{\frac{6}{5}}$, and airmass $r_0 \propto \text{AirMass}^{\frac{-5}{3}}$. Airmass is defined as the amount of atmosphere along the line of sight of the observation. The seeing $\epsilon$, is a metric used to describe the amount of distortion caused by turbulence at a given wavelength.
  
-To test the validity of the Slopes Maps equation for the 3PWFS, and the Raw Intensity method we implemented these signal processing methods into a real closed adaptive optics system using the LOOPS testbed at the Laboratoire d'Astrophysique de Marseille. The LOOPS testbed at LAM used a spatial light modulator (SLM) to create the pyramid tip. A full description of the LOOPS testbed can be found in Janin-Poitron et. al. 2019 \cite{janin2019adaptive}. On the testbed a closed loop correction was achieved for both a 3PWFS and 4PWFS with reconstructors calculated from both the Raw Intensity and Slopes Maps signal handling techniques. A reflective phase plate was used in the system to simulate turbulence, and an ALPAO deformable mirror was used to apply the correction. In all cases a stable closed loop was obtained. Figure \ref{fig:LOOOPS} shows example images from the LOOPS test-bed of (A) the pyramid signal of the 3PWFS under turbulence in closed loop, (B) the pyramid signal of the 4PWFS under turbulence in closed loop, (C) the LOOPS PSF with no turbulence, and (D) the LOOPS PSF in closed loop with the 3PWFS using the Slopes Map technique. 
+ \begin{equation}
+     \epsilon=\frac{\lambda}{r_0}
+ \end{equation}
+ 
+ The mean square wavefront error over a telescope aperture of diameter D due to atmospheric turbulence is calculated using $r_0$ \citep{noll1976zernike}.
+ 
+ \begin{equation}
+     \sigma^2=1.03(\frac{D}{r_0})^{\frac{5}{3}}
+ \end{equation}
+
+
+Atmospheric turbulence does not impart equally strong phase errors across all spatial frequencies. The distribution of power imparted by atmospheric turbulence to different spatial scales is described by the Kolmogorov power spectrum, which is given by $P(k)=0.027r_0^{-5/3}k^{-11/3}$  \citep{rampy2012production}. The power spectrum relates the strength of an aberration at a given spatial frequency, $k$, to the seeing conditions, $r_0$. The phase errors imparted by atmospheric turbulence are strongest at low spatial frequencies.
+
+The effect of atmospheric turbulence is to lower the resolution of the optical system. For a long exposure image, the image is a disk with an angular FWHM of $\approx \frac{\lambda}{r_0 }$. For short exposure images, we expect a speckle pattern of approximately $\frac{D}{r_0}$ speckles of width equal to the diffraction limit of the system. For a system partially corrected for by adaptive optics, the PSF is a diffraction-limited peak surrounded by the residual uncorrected $\frac{D}{r_0}$ halo. Figure \ref{fig:turbPSF} shows a time-averaged closed-loop PSF.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/LOOPS.png}
-    \caption{Example images from the LOOPS test-bed of A) the pyramid signal of the 3PWFS under turbulence in closed loop, B) the pyramid signal of the 4PWFS under turbulence in closed loop, C) the LOOPS PSF with no turbulence, and D) the LOOPS PSF in closed loop with the 3PWFS using the Slopes Map technique.}
-    \label{fig:LOOOPS}
+    \includegraphics{Chapter Materials/Chapter One Materials/turbPSF.png}
+    \caption{Image of a time-averaged PSF taken on the CACTI testbed described in this work. The Airy pattern can be seen in the center of the disk that is the result of uncorrected phase error.}
+    \label{fig:turbPSF}
 \end{figure}
 
-\section{The Reconstructor Matrix}
 
-In the previous sections we have derived what the expected signal is from the pyramid wavefront sensor, and how to process the signal to retain only the intensity pattern due to phase errors. Now we will explore how we take the processed wavefront sensor signals and build a reconstructor matrix that allows us to reconstruct the wavefront error. 
+ \section{Introduction to Adaptive Optics}
  
-The wavefront sensor measures a signal $S$, which includes the signal processing discussed in Section \ref{PWFSintro}. The signal can be decomposed into a summation of modes from a basis set. The interaction matrix $I$, is the bridge between the deformable mirror commands and the wavefront signals. The interaction matrix is calibrated by applying modes on the deformable mirror and recording the response from the wavefront sensor. The intensity measurements are unraveled from a 2D detector image into a 1D vector and stored as a column vector in the interaction matrix. We can use the interaction matrix to apply shapes on the deformable mirror by summing modes that are weighted by amplitudes stored in the amplitude matrix $A$. The interaction matrix and the amplitude matrix are related to an wavefront sensor signal by $S=IA$. In the AO case, we measure $S$, which is a $[M\times 1]$ matrix of wavefront sensor signals from aberrated starlight, and calibrate to find $I$ which is a $[M\times N]$ matrix. To reconstruct the signal we need to find $A$, a $[N\times 1]$ matrix the corresponding amplitudes that will give us the right wavefront shape. We cannot compute the operation $A=I^{-1}S$, because $I$ is an $[M\times N]$ size matrix and not invertible. To find $A$, a pseudo-inverse of $I$ is calculated using singular value decomposition (SVD). The SVD of I is calculated by,
+%Adaptive optics systems correct for the blurring of Earth's atmosphere in real time.
+
+In astronomy there are different types of adaptive optics systems developed to maximize correction for different objects. Ground Layer Adaptive Optics (GLAO) systems such as ARGOS \citep{rabien2019argos} at the LBT, and 'Imaka \citep{abdurrahman2018improved} at the University of Hawaii 2.2 meter telescope compensate ground layer turbulence to produce a uniform correction across a greater than 1 arcmin field of view. Multi-conjugate Adaptive Optics (MCAO) systems such as the Gemini Multi-conjugate Adaptive Optics System \citep{neichel2014gemini} have multiple deformable mirrors and wavefront sensors conjugated to layers of atmospheric turbulence at different altitudes. MCAO systems provide well corrected PSFs over a large field of view. Extreme adaptive optics systems (ExAO) are adaptive optics systems optimized for excellent wavefront correction of an on-axis guide star at the spatial frequencies of the high-contrast region of a coronagraph. 
+
+Adaptive optics systems operate under the concept of conjugate imaging. Figure \ref{fig:AOdiagram} shows the overview of the optical path of an AO system. Light from the guide star travels through the layers of Earth's atmosphere and acquires phase errors from atmospheric turbulence. In single conjugate AO we model the effects of atmospheric turbulence as a single phase screen at a known altitude that imparts all of the phase errors to the guide star's wavefront. This layer of turbulence is typically modeled to be in the entrance pupil and is imaged to conjugate planes in the AO system. The optical design of an AO system consists primarily of pupil relays that re-size and re-image the pupil plane onto the wavefront sensor and DM so that the turbulence screen is both sensed and corrected in the same plane. Adaptive optics systems work over a wavelength bandpass; to mitigate the effect of chromatic aberrations through the system, mirrors are used as the optics in these pupil relays. In a closed loop AO system the wavefront sensor is placed after the DM. When the loop is closed the wavefront sensor sees a wavefront that is the combination of the atmospheric turbulence and the correction is applied to the DM. There is a time lag between when the wavefront is sensed and when the correction applied which results in uncorrected wavefront errors that are quantified by the temporal error in the AO error budget. ExAO systems are designed to be low latency and run at loop speeds greater than 1-kHz.
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/Adaptive-Optics-System.png}
+    \caption{Diagram of an adaptive optics closed loop,(\citep{suarez2017approach}). Light from the telescope is first read into the wavefront sensor. A control system uses that signal to compute the commands to drive the deformable into the shape that will correct the wavefront. The result is a corrected wavefront.}
+    \label{fig:AOdiagram}
+\end{figure}
+
+There are several ExAO instruments in operation on current generation telescopes. Current instruments include the Subaru Coronagraphic Extreme Adaptive Optics instrument (SCExAO) \citep{jovanovic2015subaru}, the Spectro-Polarimetric High-contrast Exoplanet Research instrument (SPHERE) \citep{beuzit2008sphere}, the Gemini Planet Imager (GPI) \citep{macintosh2014first}, the Keck Planet Imager and Characterizer (KPIC) \citep{jovanovic2019keck}, and most recently the Magellan Extreme Adaptive Optics System (MagAO-X) \citep{males2020magao}. All of these instruments have common features: a high actuator count deformable mirror running at extreme speeds (at least 1kHz), a high-performance wavefront sensor (WFS), and a high-contrast coronagraph These instruments are pathfinders for ExAO systems on the GSMTs.
+
+
+
+
+
+
+% Wavefront sensors have different sensitivities to phase errors of different spatial frequencies. In ExAO we need a wavefront sensor that is highly sensitive across all spatial frequencies to maximize light suppression by the coronagraph, and reduce high spatial frequency speckle noise in short exposure images. In an ideal adaptive optics system the dominating source of noise on the wavefront sensor measurement is photon noise. The value $\beta_p$ is used quantify the sensitivity to photon noise of a wavefront sensor. Figure \ref{fig:guyon2005} plots $\beta_p$ as a function of spatial frequency for different types of wavefront sensors. The most sensitive wavefront sensor is the Zernike wavefront sensor (ZWFS), that has a $\beta_p=1$ across all spatial frequencies, and the unmodulated pyramid wavefront sensor (FPYRWFS) is a close second with a $\beta_p=\sqrt{2}$ at all spatial frequencies. These wavefront sensors suffer from a lack of dynamic range. Phase errors from the turbulent atmosphere vary in strength, and large phase errors cause the signals from the Zernike and Pyramid wavefront sensors to become nonlinear. The pyramid wavefront sensor has the option of modulation which increases the linearity of signal at the cost of sensitivity. The ability to balance the sensitivity and dynamic range with the pyramid makes it robust to different seeing conditions and is ideal for ExAO wavefront sensing. 
+
+
+
+
+\subsection{The Strehl Ratio}
+
+\begin{figure}
+    \centering
+    \includegraphics{Chapter Materials/Chapter One Materials/StrehlRatio.png}
+    \caption{Aberrated PSF plotted against an aberration-free PSF> The ratio of the two peak values is the Strehl ratio. This is Figure 3.17 in Encyclopedia of Modern Optics.}
+    \label{fig:SR}
+\end{figure}
+
+An adaptive optics system compensates phase errors to return the resolution of the system to the diffraction limit of the telescope. The correction is not perfect, and we are interested in measuring the performance of the AO system. The Strehl ratio is defined as the ratio between the peak of an imaged PSF, with the peak of an aberration-free PSF \citep{reine2005encyclopedia}. Figure \ref{fig:SR} plots an aberrated PSF against the aberration-free PSF. The peak of the aberrated PSF is smaller than the aberration-free PSF. The Strehl ratio can be used to approximate the residual RMS uncorrected phase errors through the Marechal approximation given by:
 
 \begin{equation}
-    SVD(I)=U\Sigma V^T
+    S \cong e^{-\sigma^2}
 \end{equation}
 
-where $U$ is a $[M\times M]$ matrix, $Sigma$ is an $[M\times N]$ matrix with singular values on the diagonal, and $V$ is an $[N\times N]$ matrix. We calculate the reconstructor matrix $R$ which is the pseudo-inverse of $I$ using $U$,$V$,and $\Sigma$.
+\noindent where $S$ is the Strehl ratio, and $\sigma^2$ is the phase variance of the wavefront in units of radians. The measurement of the Strehl ratio for an AO corrected PSF is given by:
 
 \begin{equation}
-   R=V\Sigma^{\dag}U^T
+    S=\frac{P_{data}/Flux_{data}}{P_{0}/Flux_{0}}
+    \label{Strehl}
 \end{equation}
 
-The Reconstructor matrix R is a $[N\times M]$ sized matrix, and we calculate the vector of modal amplitudes using equation \ref{ReconEq}.
 
-\begin{equation}
-    A=RS
-    \label{ReconEq}
-\end{equation}
+\noindent The Strehl ratio is calculated by taking the ratio of the peak intensity of the partially corrected PSF, $P_{data}$,  to the peak intensity of an aberration free PSF, $P_0$. The peaks are normalized by the flux in the image. A simulated model can be used for the aberration free image. 
 
-An additional matrix $C$ of size $[K\times N]$ that is the commands to drive the deformable mirror to shapes that are modes in the basis set is needed. The amplitude matrix $A$ scales this command matrix so that the proper amplitude of each mode is applied. The multiplication $CA$, gives a $[K\times 1]$ vector that are the deformable mirror commands. Reshaping the $[K\times 1]$ matrix into a $[\sqrt{K}\times \sqrt{K}]$ matrix gives the command for each actuator in the deformable mirror, where the deformable mirror is a square of $\sqrt{K}\times \sqrt{K}$ actuators.
+In the following chapters we discuss the design and analysis of a wavefront sensor for astronomical adaptive optics. The performance of the wavefront sensor is measured using the Strehl ratio which measures AO system performance. The wavefront sensor is a sub-component of the AO system so there is a direct relationship between the wavefront sensor performance and the performance of the AO system as a whole. The wavefront sensor will be used in experiments performed in simulation and on a testbed to determine the performance of the wavefront sensor. The seeing of atmospheric turbulence can be variable, and the wavefront sensor needs to be robust to different turbulence strengths. This will be tested by measuring the Strehl ratio as a function of turbulence strength. The sensitivity of the wavefront sensor to photon noise is tested by measuring the Strehl for stars of different magnitudes. 
+
+
+
+

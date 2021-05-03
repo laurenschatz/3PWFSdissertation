@@ -15,6 +15,28 @@
 \usepackage{hyphenat}
 \usepackage{url}
 \usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \usepackage[bookmarks,colorlinks=true,urlcolor=black,linkcolor=black,citecolor=black]{hyperref}
 \usepackage{cleveref}
@@ -59,15 +81,23 @@
 \newcommand{\Ktwo}{\textbf{K}_\textbf{2}}
 \newcommand{\Kj}{\textbf{K}_\textbf{j}}
 
+%%%%%% Copyright %%%%%%%%%%
+\setboolean{Copyright}{true}
+
+\setboolean{CCBY}{false}
+
+\setboolean{CCBYSA}{false}
+
+\setboolean{CCBYND}{false}
 % Set up some values.
-\completetitle{Development of a Three Sided Pyramid Wavefront Sensor for Astronomical Adaptive Optics}
-\fullname{Lauren H Schatz}			% Grad college wants your full name here.
-\degreename{Doctor of Philosophy}	% Title of your degree.
+\completetitle{Development of a Three-Sided Pyramid Wavefront Sensor for Astronomical Adaptive Optics}
+\fullname{Lauren H. Schatz}			% Grad college wants your full name here.
+\degreename{Doctor~of~Philosophy}	% Title of your degree.
 
 \begin{document}
 \maketitlepage
 {WYANT COLLEGE OF OPTICAL SCIENCES} % Title of your department.
-{2020}	
+{2021}	
 
 \approval
 {May 12$^{th}$,2021}		% Defense Date	
@@ -100,13 +130,16 @@
 % Include the ``Abstract''
 \incabstract{abstract}
 
-\include{Introduction}
 \include{ChapterOne}
 \include{ChapterTwo}
-\include{ChapterFour}
 \include{ChapterThree}
+\include{ChapterFour}
 \include{ChapterFive}
 \include{ChapterSix}
+\include{ChapterSeven}
+
+\appendix
+\include{Appendix} \label{strehlct}
 
 \renewcommand{\baselinestretch}{1}		% chaning the value
 \small\normalsize						% switch size to make the value take

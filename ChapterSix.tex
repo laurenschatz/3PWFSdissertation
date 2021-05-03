@@ -1,39 +1,213 @@
-\chapter{Discussion and Conclusions}\label{CH6}
+\chapter{Experimental Demonstration of the Three-Sided Pyramid Wavefront Sensor on the CACTI Testbed}\label{CH6}
 
-\section{Discussion}
+The next generation of giant ground and space telescopes will have the light-collecting power to detect and characterize potentially habitable terrestrial exoplanets for the first time. This will only be achievable if the performance of GSMT-ExAO systems is optimized. The ground based GSMTs include the Thirty Meter Telescope (TMT) \citep{chisholm2020thirty}, the Giant Magellan Telescope (GMT) \citep{fanson2020overview}, and the European Extremely Large Telescope (E-ELT) \citep{ramsay2020eso}. Proposed giant space telescope missions are the LUVIOR \citep{2020AAS...23544704O}, and HabEx missions \citep{gaudi2020habitable}. Various testbeds are advancing technology and techniques to enable exoplanet imaging on the GSMTs. Current testbeds include the High Contrast Imager for Complex Aperture Telescopes (HiCAT) \citep{2014SPIE.9143E..27N}, at the Space Telescope Science Institute,  High-Contrast High-Resolution Spectroscopy for Segmented Telescopes (HCST) \citep{jovanovic2018high}, at the California Institute of Technology, the Decadal Survey Testbed \citep{belikov2014ames}, at the NASA Jet Propulsion Laboratory (JPL), LAM-ONERA On-sky Pyramid Sensor (LOOPS) \citep{janin2019adaptive}, at the Laboratoire d'Astrophysique de Marseille, the Occulting Mask Coronagraph \citep{shi2017dynamic}, also at JPL, and the High Contrast High- Resolution Spectroscopy for Segmented telescopes testbed (HCST) \citep{jovanovic2018high}, at the California Institute of Technology. The Magellan Extreme Adaptive Optics system (MagAO-X) \citep{males2020magao}, developed for the Magellan Clay Telescope, doubles as an ExAO testbed. Predictive real time control algorithms are being explored on MagAO-X to improve ExAO correction \citep{haffert2021data}. MagAO-X employs a Vector Apodizing Phase Plate Coronagraph (vAPP) \citep{snik2012vector}, to enable low order modal wavefront sensing \citep{2019JATIS...5d9004M}. The the Subaru Coronagraphic Extreme Adaptive Optics instrument (SCExAO) \citep{jovanovic2015subaru}, similarly is used to advance ExAO technology. There are many more high-contrast imaging testbeds in existence, and many are listed on the Community of Adaptive Optics and High Contrast testbeds website \citep{CHAOTIC}. A recent summary of current coronagraphy testbeds for space missions can be found in the decadal white paper \citep{mazoyer2019high}.
 
-The diffraction theory of the Foucault test predicts an intensity pattern that is the Hilbert transform. The resulting signal is related to the gradient of the wavefront phase, but without the scaling by spatial frequency. The PWFS is an extension of the Foucault test, and the diffraction theory of the Foucault accurately predicts the intensity patterns seen by a PWFS. Similar to the Foucault test sensitivity of a PWFS with no modulation is independent of spatial frequency as found in previous work by Guyon\cite{guyon2005} because all spatial frequencies produce an equally strong signal.
+the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI), was designed with the flexibility to support visiting instruments and to be easily re-configurable to perform multiple experiments. We first describe the design of CACTI, review its operation and calibration procedures, and discuss its current status. We then discuss an experiment performed on CACTI with a visiting three-sided pyramid wavefront sensor (3PWFS) to explore an alternative wavefront sensor architecture for GSMT-ExAO. Both a 3PWFS and 4PWFS were integrated into CACTI to demonstrate the operation of a 3PWFS and compare it to the 4PWFS. Finally, we present results from experiments demonstrating the operation of the 3PWFS, and comparisons to the 4PWFS.
 
- Codona et al.\cite{codona2018comparative} used the AOsim3 wave optics package to compare end to end performance of a 3PWFS to a 4PWFS with no modulation. In this simulation the Raw Intensity  signal handling method was used. In open loop with no noise the study showed that the 4PWFS out performed the 3PWFS by 0.005 Strehl. Our simulation results agree with the findings by Codona et al. We found in our simulations with 0.5 read noise that the performance of the wavefront sensors are within 0.01 Strehl. Our results differ from Codona et al. when including read noise. They found that for a detector with $3e^-$ read noise, that there was a gap performance improvement by 1 guide star magnitude in favor of the 3PWFS. Codona et. al. considered other factors including system latency, and were sensing in the J-band. Our simulations are in r-band and were optimized only for loop gain. Using a detector with $12 e^-$ read noise we found that the performance of the wavefront sensors are once again comparable, and we found only $~0.02$ gain in Strehl from the 3PWFS at 10th magnitude. The scope of our simulations is limited but still agree that the 3PWFS is less sensitive to read noise, however the amount of improvement gained is still under question. Both the 3PWFS and 4PWFS discussed in this paper are refractive, and image all pupils onto the same detector. Moving towards a reflective PWFS that would image each pupil onto its own detector could have a more substantial benefit. Each detector would be smaller, resulting in faster readout speeds with less added read noise. Low read noise detectors are expensive, so using a reflective PWFS would increase system cost and complexity.   
+\section{Design of CACTI}
+CACTI was designed to model a full end-to-end adaptive optics system and have the flexibility to support multiple experiments. In the configuration described here, CACTI consisted of two components, an adaptive optics simulator, and a pyramid wavefront sensor testbed. In the following sections, we describe the optical design in detail. 
+
+\subsection{Adaptive Optics Simulator}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/CACTIzemax.png}
+    \caption{Optical design of CACTI. Light starts from a point source from the HeNe laser and relayed through a series of afocal pupil relays. The focal plane of the AO simulator is after the 6${^{th}}$ OAP. It is collimated by a lens and passed into the PWFS testbed. A beamsplitter sends the same focal plane to both the 3PWFS and 4PWFS to minimize non-common path errors.}
+    \label{fig:CACTIZemax}
+\end{figure}
+
+CACTI was designed to simulate atmospheric turbulence and a complete closed loop AO system. The optical design of  CACTI  is shown in Figure \ref{fig:CACTIZemax} and Table \ref{tab:CACTItable} summarizes the main components. The layout on the optical table is shown in Figure \ref{fig:CACTI}. A Helium-Neon (HeNe) laser (wavelength 633-$nm$) is used for inital alignment and testing.  The light is passed to a spatial filter with a 10-$\mu m$ pinhole to clean up any wavefront errors, and insure that the start of the system is an unresolved point source. The point source is then collimated by an off-axis parabolic (OAP) mirror to simulate starlight coming from infinity. There are six OAP mirrors in total that form the pupil relays of the system. All are cored from the same parent with $\lambda /10$ surface quality (Peak-to-Valley). Each OAP has a focal length of 375.25-$mm$ and an off-axis angle of 23 degrees. A 50/50 beamsplitter cube is placed into the collimated beam after the first OAP as an optional input for another collimated light source. After the beamsplitter a 7.5-$mm$ in diameter circular clear aperture mask is placed to define the entrance pupil of CACTI. The first pupil relay formed by the 2$^{nd}$ and 3$^{rd}$ OAP mirrors re-images the entrance pupil onto a flat mirror that is mounted on a kinematic base. The flat mirror is intended to be removed and replaced by a DM in the future. The second pupil relay created by the 4$^{th}$ and 5$^{th}$ OAP mirrors, relays the pupil onto a 1024 actuator Boston Micromachine 1K (BMC1K) DM. In the experiments described here, the BMC1K is used to simulate the atmosphere, correct the errors in closed-loop with the wavefront sensor, and correct for common path errors from misalignments. The last OAP focuses the light to the final focal plane in the AO simulator. A 50/50 beamsplitter is placed in this converging beam so that an additional focal plane can be accessed. In the current configuration of CACTI we have placed a Basler ACE CMOS camera as our science camera (Camsci) at this focal plane.
+
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{ | l| l | }
+			\hline
+			\textbf{Component}& \textbf{Description}\\ \hline
+			Light Source & Helium-Neon laser 633-$nm$ $\lambda$\\ \hline
+			Spatial filter & 10-$\mu m$ Pinhole \\ \hline
+			Off-axis parabolic mirrors & 375.25-mm Focal length, 23$^{\circ}$ off-axis angle \\ \hline
+            Entrance pupil & 7.5-mm Clear aperture mask \\ \hline
+            Boston Micromachines deformable mirror & 1024 Actuators, 9mm in diameter \\ \hline
+            Beamsplitters & 50/50 Cube beamsplitter \\ \hline
+            Modulation Mirror &  PI S-331 Piezo-actuator stage \\ \hline
+            3PWFS Optic & Fused silica glass monolith \\ \hline
+            4PWFS Optic & Crossed roof prisms \\ \hline
+            Science Camera (Camsci) & Basler ACE acA640-750um CMOS\\ \hline
+            3PWFS Camera (Camzyla) & Zyla 4.2+ sCMOS detector \\ \hline
+            4PWFS Camera (Cam4p) & Basler ace acA720-520um CMOS \\ \hline
+            Lens 1 (L1) & Doublet 500-mm focal length  \\ \hline
+            Lens 2 (L2) & Doublet (CHECK ZEMAX)  \\ \hline
+            Lens 3 (L3) & Custom achromatic air-spaced triplet  \\ \hline
+            3PWFS Camera lens 1 (C1) & Doublet 30-mm focal length \\ \hline
+            3PWFS Camera lens 2 (C2) & Doublet 30-mm focal length \\ \hline
+            4PWFS Camera lens 1 (C3) & Doublet 50-mm focal length \\ \hline
+            4PWFS Camera lens 2 (C4) & Doublet 30-mm focal length \\ \hline
+				
+			\end{tabular}
+		\end{center}
+	\caption{Descriptions of the components in CACTI.}
+	\label{tab:CACTItable}
+\end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/CACTI.png}
+    \caption{In the current configuration CACTI consists of an Adaptive Optics Simulator and the PWFS testbed. Beamsplitters are used in CACTI to provide access to focal planes, collimated spaces, and additional sources. In the current configuration light is relayed through the AO simulator onto the 1024 actuator Boston Micromachine 1K (BMC1K) DM OAP mirrors. The light is then passed to the PWFS testbed which includes a modulation mirror, a 4PWFS and a 3PWFS.}
+    \label{fig:CACTI}
+\end{figure}
+
+\subsection{Software and Calibration}
+
+CACTI uses the Compute And Control For Adaptive Optics (CACAO) real-time control software package \citep{guyon2018compute}. The calibration of the AO system by CACAO is a multi-step process. Hadamard modes are applied to the DM, and the WFS response is recorded. The WFS signals from the Hadamard modes are then decomposed into the response of the influence functions from single actuators. These influence functions are then projected onto Fourier modes to create the basis set for the modal wavefront control. In these steps the illumination pattern of the deformable mirror is determined by thresholding actuators that don't give a response in the wavefront sensor. Similarly a mask of the PWFS detector pixels is generated to keep only the valid pixels from the PWFS pupils on the detector that will be used for wavefront sensing. CACAO is also used to generate the phase screens to simulate turbulence. Due to the limited low-order stroke of the BMC1K, the power-spectrum of the turbulence generated by CACAO is filtered to suppress the low order modes so that the full stroke of the DM is not used. At middle to high spatial frequencies the power spectrum matches that of Kolmogorov turbulence. 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Designing OAPs in Zemax}
+The main design effort for the AO simulator was modeling the OAP mirrors. The OAP mirrors on CACTI were cored from a parent parabolic mirror. Each OAP has the same focal length and off-axis angle. The off-axis angle of an OAP mirror is determined by the distance to the axis of the parent mirror. OAPs that are cored close to the edge of the parent mirror have large off-axis angles, and a significant wedge. Figure (MAKE) is a picture of an OAP mirror with a 90$^{\circ}$ off-axis angle and a significant wedge \citep{edmundoptic}. The wedge of the OAP mirror is helpful for incorporating OAP mirrors into a design, because the wedge informs the clocking of the OAP in the mirror mount, and the tilt of the OAP with respect to the optical table. The bottom edge of the thick portion of the wedge should be parallel with the collimated beam. Figure \ref{fig:OAPcol} is a Zemax model of an OAP collimating a point source. The OAP is rotated and clocked so that the bottom edge of the thick wedge is parallel to the collimated beam. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/OAP.png}
+    \caption{Image of an OAP mirror with a 90$^{\circ}$ off-axis angle.}
+    \label{fig:my_label}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/OAPcollimate.png}
+    \caption{Zemax diagram of a point source collimated by an OAP mirror. The thick bottom edge of the OAP wedge is always parallel to the collimated beam. }
+    \label{fig:OAPcol}
+\end{figure}
+
+OAPs are modeled in Zemax by designing a parabolic mirror and decentering it with respect to the optical axis. The clocking of the OAP is determined by how the parabolic mirror is decentered. For example in Figure \ref{fig:OAPex} the parent parabola is shifted below the optical axis of the system. This results in the illumination of the top portion of the parabolic mirror, which has a wedge shape where the thickest part of the wedge is on top. If the inverse of that wedge was needed, the parent parabola would be shifted above the optical axis of the system. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/OAPexample.png}
+    \caption{Diagram of how OAP mirrors are modeled in Zemax. A parabolic mirror is shifted and tilted to achieve the effect of an OAP mirror.}
+    \label{fig:OAPex}
+\end{figure}
+
+Using this knowledge of OAP design we can set solves in the Zemax design to correctly place OAPs. In the lens data editor a coordinate break around the OAP. The Decenter-Y value before the mirror surface is set to be variable, and the Decenter-Y value after the mirror is set to a chief ray solve. The tilt of the OAP can be adjusted by changing the tilt-about-X variable.  In the merit function set operands to minimize the RMS wavefront error and to insure that the rays leaving the mirror are parallel to the optical axis if the OAP is being used to collimate. If done correctly the optimization will set the parabolic mirror at the correct decenter and create a perfectly collimated beam from a point source. In zemax the distances between optics is displayed at the thickness variable in the lens data editor. Zemax calculates that distance based on the vertex of the mirror, which for OAPs is the vertex of the parent parabola. To find the correct distances between OAP mirror surface use operands in the merit function to determine the vertices of the mirror surfaces and solve for the distances between them using math operands. 
+
+
+
+\subsection{Pyramid Wavefront Sensor Testbed}
+
+ExAO systems need high sampling of the wavefront to optimize performance and as a result require larger detectors. An ideal wavefront sensing camera for ExAO has a large number of pixels that can be read out at a fast speed with low read noise. Current detectors are limited so there is a trade-off between detector, size, speed and performance. We are interested in exploring the 3PWFS as an alternative wavefront sensor for the GSMTs because the 3PWFS uses fewer detector pixels than the 4PWFS. Previous work has shown in simulation that because of this the 3PWFS is less sensitive to read noise, resulting in a modest boost in performance. Schatz et al. (2021, submitted). The goal of this study is to test a 3PWFS using CACTI, and expand the previous study to understand how the 3PWFS performs under different turbulence conditions compared to the 4PWFS. 
+
+The design of the PWFS testbed is detailed in Figure \ref{fig:CACTI}. Light from the AO simulator is collimated by a 500-mm focal length lens (L1) which relays the exit pupil of the AO simulator to the PWFS testbed. The exit pupil of the AO simulator becomes the entrance pupil to the PWFS testbed, which is then resized by a pupil relay consisting of an achromatic doublet (L2) and a custom air-spaced achromatic triplet lens (L3). The pupil is imaged on the the modulation mirror, which is a $\lambda/20$ flat mirror mounted on a PI S-331 high speed piezo-actuator tip/tilt platform. A 3PWFS designed by Hartsci LLC has been integrated into the instrument for the performance test. The three sided pyramid optic is single prism made from fused silica glass and has a tip smaller than 5 microns that was custom made for this experiment. Figure \ref{fig:pyramidOptics}.A shows the 3D model of the manufactured prism. The 4PWFS in CACTI uses two crossed roof prisms for its pyramid optic shown in Figure \ref{fig:pyramidOptics}.B. This is the same type of pyramid used in the SCExAO \citep{jovanovic2015subaru}.  A 50/50 beamsplitter after the modulation mirror sends the same PSF to the pyramid tips of the 3PWFS and 4PWFS to mitigate non-common path errors, as all the optics up to that point are common to both wavefront sensors. The PSF on the pyramid tips were sharpened by the DM using a grid search that applies different amplitudes of Zernike modes on the deformable mirror, and saves the combination of modes that maximizes the Strehl Ratio at the focal plane as the  DM set point where non-common path errors are minimized, (K. Van Gorkom et al. (2021, submitted)).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/pyramidOptics.png}
+    \caption{Drawings of the pyramid optics in CACTI. A. The 3PWFS pyramid is a single prism made from fused silica glass. The 4PWFS pyramid is two crossed roof prisms. This pyramid is a copy of of the pyramid used by SCeXAO. }
+    \label{fig:pyramidOptics}
+\end{figure}
+
+
+The pupil of each PWFS are imaged on the the detectors by using two camera lenses, C1 and C2 for the 3PWFS, and C3 and C4 for the 4PWFS,  that form a zoom lens system to insure that the sizes of pupils from both PWFS are 30 pixels in diameter. The 3PWFS uses a Andor Zyla 4.2+ sCMOS and the 4PWFS uses a Basler ace acA720-520um CMOS camera. Schatz et al. found in simulation that when the PWFS are well illuminated by light the effects of read noise to performance are negligible. The experiments performed in this paper were under bright light conditions, so having different cameras with different noise characteristics should not effect the PWFS performance. The PWFS signals on CACTI were processed using the the Raw Intensity (RI) method. The detector signal from the PWFS is dark subtracted, and a threshold is applied to mask out any pixels outside of the PWFS pupils. In the RI method the remaining signal is used as-is and are unraveled into a vector of intensity values that is used for calibration and wavefront reconstruction.
+
+
+\subsection{Designing Pyramid Optics in Zemax}
+
+For the CACTI testbed the pyramid optics were designed using sequential ray tracing. The pyramid optic was modeled as a plate of glass that is tilted to mimic that angle of the pyramid facets. Multiple configurations were used to rotate the plate to create the facets of the pyramid and trace rays at different locations to create the focal plane splitting. The sizes and separations of the pupils were set by setting the distances between the camera lenses, the PWFS, and the science camera as variable. Each lens was first modeled as a paraxial lens, and the focal length was set to variable. After a first iteration of design real lenses were chosen with similar focal lengths and incorporated into the model. The merit function was defined to minimizes aberrations in the system and set the sizes and separations of the pyramid pupils to our requirements. The resulting pupils can be viewed in the beam footprint diagram. It was necessary to create a dummy surface before the image and set the reference coordinate system to that surface so that Zemax displays the pupils of each configuration correctly. If left in the normal configuration, Zemax will display the pupils as overlapping, because each pupil will be plotted with respect to its own coordinate system and not the global coordinate system. The beam footprint for the 3PWFS and 4PWFS are given in Figure \ref{fig:beamfp}.A and Figure\ref{fig:beamfp}.B. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/BeamFootPrint.png}
+    \caption{Beam foot prints of the PWFS pupils from a 3PWFS and 4PWFS modeled in Zemax. A. Is the beam footprint from the 3PWFS. B. Is the beam footprint from the 4PWFS.  }
+    \label{fig:beamfp}
+\end{figure}
+
+
+\subsection{Current Status}
+
+The alignment of the adaptive optics simulator and PWFS tesbed in CACTI was completed in May 2020. Figure \ref{fig:cactiTestbed} is a picture of the as built system. Light from the HeNe laser is relayed by the six OAP mirrors, and is then coupled to the PWFS testbed using a beam triangle formed by two flat mirrors. Figure \ref{fig:PWFStestbed} is a close up diagram of the PWFS testbed. The first two lenses (L1 and L2) relay the entrance pupil of the PWFS testbed onto the PI modulation mirror (PI). A beamsplitter after the modulation mirror picks off light to the four-sided pyramid (4P) and the through beam is sent to the three-sided pyramid (3P). Both pyramids have two camera lenses (C1 and C2) that form a zoom lens to match the diameters of the pupils of the two PWFS. The measured pupil diameter for the 4PWFS is 30.5 pixels and 29.5 pixels for the 3PWFS. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/cactiTestbed.png}
+    \caption{Image of the as-built CACTI testbed. Light starts from the HeNe laser and propagates through the AO simulator on the left half of the optical table. After the BMC1K and the final OAP, the light is relayed to the PWFS testbed on the right half of the optical table.}
+    \label{fig:cactiTestbed}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/PWFStestbed.png}
+    \caption{Close up image of the PWFS testbed. Light enters the system before L1 on the left side. The light is relayed onto the modulation mirror (PI). The through beam propagates through to the 3PWFS which consists of the pyramid optic (3P), camera lenses (C1$\&$2) and the Zyla CMOS camera (Camzyla). Light is by a beamsplitter (BS) to the 4PWFS arm which consists of the pyramid (4P), camera lenses (C3$\&$4) and the Basler CMOS camera (Cam4p).  }
+    \label{fig:PWFStestbed}
+\end{figure}
+
+
+ The system responses to the flat wavefront generated by the deformable mirror is given by Figure \ref{fig:flatCACTI}. Figure \ref{fig:flatCACTI}.A is the PSF in logarithmic scale on our science camera. Figure \ref{fig:flatCACTI}.B similarly is the PSF on the pyramid tip also in log scale. Figure  \ref{fig:flatCACTI}.C and Figure \ref{fig:flatCACTI}.D are the pyramid pupils from a flat wavefront with 5$\lambda/D$ modulation for the 3PWFS and 4PWFS respectively. There is a ghost in the CACTI PWFS located at the 4$^{th}$ Airy ring and caused by one of the lenses in the system. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/flatCACTI.png}
+    \caption{Signals from CACTI in response to the optimized flat wavefront. A. The PSF on the science camera. B. The optimized PSF on the focal plane of the PWFS tips. C. The 3PWFS pupils on Camzyla at 5 $\lambda/D$ modulation. D. The 4PWFS pupils on Cam4p at 5 $\lambda/D$ modulation.}
+    \label{fig:flatCACTI}
+\end{figure}
+
+
+We have successfully closed the AO loop on CACTI with both the 4PWFS and 3PWFS using both the RI and SM signal handling methods. This marks the first time the AO loop has been closed on a glass pyramid 3PWFS. Previous work by Schatz et al. closed the AO loop on a 3PWFS on the LOOPS testbed at the Laboratoire d'Astrophysique de Marseille, created by a phase screen applied to a spatial light modulator. 
+
+
+The deformable mirror on CACTI was used to both generate the turbulence screen and apply the correction. This is done using the CACAO software which creates multiple channels of commands for the deformable mirror. In one channel we can stream the turbulence phase screens, and in another channel we have the commands computed by real time control software using the PWFS signals. The actual command applied to the DM is a summation of commands from all of the channels. Figure \ref{fig:turbCACTI} shows the closed loop PSFs and pyramid pupils from a turbulence strength of 0.3-$\mu m$ RMS error on CACTI. Figure \ref{fig:turbCACTI}.A and \ref{fig:turbCACTI}.B are the 3PWFS pupils and the closed loop PSF in log scale on the science camera. Figure \ref{fig:turbCACTI}.C and \ref{fig:turbCACTI}.D are the 4PWFS pupils and the closed loop PSF in log scale on the science camera.
+
+% \jrmcom{GREAT STUFF!!!}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/turbCACTI.png}
+    \caption{A. Time-averaged science camera image of the 3PWFS closed-loop PSF in log scale. B. Turbulence streaming across the 3PWFS pupils. C. Time-averaged science camera image of the 3PWFS closed-loop PSF in log scale. D. Turbulence streaming across the 4PWFS pupils.}
+    \label{fig:turbCACTI}
+\end{figure}
+
+
+\section{Experimental Details}
+
+
+The CACTI testbed was used to compare the performance of a 3PWFS and 4PWFS in varying strengths of turbulence. Previous work by Schatz et al. found in simulation that the performance of the two wavefront sensors are comparable. These simulations however were run for only one seeing condition. The goal of this experiment is to determine the relative performance of the 3PWFS to the 4PWFS in varying strengths of turbulence using both the Raw Intensity and Slope Maps signal processing methods. The performance was determined by measuring the relative Strehl ratio of the AO corrected PSF and the aberration free PSF. For the CACTI testbed our aberration free PSF was the flat wavefront PSF on the science camera created by the deformable mirror shown in Figure \ref{fig:flatCACTI}.A., which we will refer to as the reference PSF. The reference PSF was used in the calibration of each PWFS. To calculate the Strehl Ratio we developed a Strehl Calculation pipeline detailed in Appendix A.
+
+The first experiment performed on CACTI was to measure the Strehl Ratio as a function of turbulence strength and modulation radius for both the 3PWFS and the 4PWFS.  This experiment was performed using the Raw Intensity signal handling method. The modulation radii used were: 1.6 $\lambda/D$, 3.25 $\lambda/D$, and 5 $\lambda/D$. At each modulation radius the following experiment was performed at a loop speed of 400-Hz:
+
+\begin{itemize}
+    \item Apply the best flat commands on the DM and create the reference PSF from the average of 1000 frames
+    \item Dark frames taken for each of the cameras. Dark frames created from an average of 1000 frames
+    \item A new calibration and reconstructor matrix was taken for each modulation radius.
+    \item Apply simulated turbulence at levels 0.1-$\mu m$, 0.2-$\mu m$, 0.3-$\mu m$, 0.4-$\mu m$, 0.5-$\mu m$ RMS wavefront error. 
+    \item At each level of turbulence strength, generate 5 different phase screens
+    \item At each phase screen record 50 closed-loop PSF images, where each image is created from taking the average from 200 frames of data. 
+    \item Calculate the average Strehl value from the closed-loop PSFs and average the Strehl ratio over the 5 trails to create an average Strehl value for each turbulence strength.
+    \item Plot the Strehl value as a function of turbulence strength and magnitude radius. 
+    
+
+\end{itemize}
+
+
+
+
+\section{Results}
+We found that 3PWFS performed slightly better at higher modulations than the 4PWFS. At low modulation the performance of both PWFS was comparable for low turbulence strength. In stronger turbulence the 4PWFS slightly outperformed the 3PWFS. Figure \ref{fig:results} shows the resulting Strehl as a function of turbulence strength for modulations radii of 1.6 $\lambda/D$, 3.25 $\lambda/D$, and 5 $\lambda/D$. In these results, the Strehl ratio is the relative Strehl ratio in which the AO-corrected PSF is compared to the reference PSF. For each level of turbulence five different turbulent phase screens were used to measure the Strehl. A mean Strehl ratio was calculated for each of the turbulence screens. The accepted Strehl value of the PWFS at a turbulence strength is the average of the Strehl values from the five screens. The error bars were calculated by taking the standard deviation of the Strehl values from the five screens and dividing by the square-root of the number of screens. The data was processed by the Strehl calculation tool detailed in Appendix \ref{strehlct}. The difference in Strehl for the 3PWFS compared to the 4PWFS varies on average by +0.02 Strehl at 1.6 $\lambda/D$, +0.02 Strehl at +3.25 $\lambda/D$, and +0.03 Strehl at 5 $\lambda/D$ modulation. It is difficult to perform a direct comparison of these PWFS because any misalignments or non-common path errors in the camera lenses could result in a change in system performance. An effort was made to minimize these errors by taking all of the data on the same day, except for the 3PWFSRI 5 $\lambda/D$ modulation data which was taken two days after. The results show that the 3PWFS has comparable performance to the 4PWFS in our laboratory demonstration. 
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Five Materials/StrehlvsTurbRI4vs3.png}
+    \caption{ Strehl as a function of turbulence strength for modulations radii of 1.6 $\lambda/D$, 3.25 $\lambda/D$, and 5 $\lambda/D$. In all trials the performance of both PWFS were comparable.  At larger modulations the 3PWFS performs slightly better. A large gain in performance is seen when the modulation radius is reduced.}
+    \label{fig:results}
+\end{figure}
+
+In our tests we found that the performance of both PWFS increased significantly at lower modulation. The gain in performance from the 3PWFS at 1.6 $\lambda/D$ was an average of 0.34 Strehl compared to 3.25 $\lambda/D$, and 0.28 Strehl compared to 5 $\lambda/D$. For the 4PWFS the gain in Strehl was and average of  0.38 Strehl compared to 3.25 $\lambda/D$, and 0.33 Strehl compared to 5 $\lambda/D$. The results demonstrate the loss in sensitivity due to higher modulation. 
+
+\subsection{Discussion}
+We have found that the 3PWFS is a viable wavefront sensor that is able to fully reconstruct a wavefront and produce a stable closed loop. Our simulations assumed a perfect wavefront sensor with the absence of manufacturing errors. A high quality four sided pyramid optic is difficult and expensive to manufacture. Common errors on four sided pyramid manufacturing include roofing of the pyramid tip, or chipping of the pyramid tip which result in a loss of Strehl.  The 3PWFS is an exciting opportunity for systems that face a trade off between cost and quality. A real 3PWFS could be cheaper and offer better performance than a 4PWFS. As a next step to developing the potential of the 3PWFS the University of Arizona Extreme Wavefront Control Lab (XWCL) in partnership with Hart Scientific  manufactured a three sided pyramid optic with a tip less than $5\mu m$ in size. The optic has been integrated into a 3PWFS that is a visiting instrument on the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI). 
  
- We have found that the 3PWFS is a viable wavefront sensor that is able to fully reconstruct a wavefront and produce a stable closed loop. Our simulations assumed a perfect wavefront sensor with the absence of manufacturing errors. A high quality four sided pyramid optic is difficult and expensive to manufacture. Common errors on four sided pyramid manufacturing include roofing of the pyramid tip, or chipping of the pyramid tip which result in a loss of Strehl.  The 3PWFS is an exciting opportunity for systems that face a trade off between cost and quality. A real 3PWFS could be cheaper and offer better performance than a 4PWFS. As a next step to developing the potential of the 3PWFS the University of Arizona Extreme Wavefront Control Lab (XWCL) in partnership with Hart Scientific has manufactured a three sided pyramid optic with a tip less than $5\mu m$ in size. The optic has been integrated into a 3PWFS that is a visiting instrument on the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI). A future experiment will test the performance of the 3PWFS against the currently integrated 4PWFS under different strengths of turbulence. 
- 
+In the current configuration a 3PWFS and 4PWFS were integrated into CACTI for a performance test. Both PWFS were designed with refractive pyramid optics and had similar sampling across the pyramid pupils. Effort was put into minimizing the differences between each PWFS. Non-common path error was minimized by insuring each pyramid optic had the same PSF on the tip. The performance of each wavefront sensor was found to be and average of 0.02 Strehl at 1.6 $\lambda/D$, 0.02 Strehl at 3.25 $\lambda/D$, and 0.03 Strehl at 5 $\lambda/D$ modulation. The performance of the PWFS are too similar to decouple any differences from systematic errors such as misalignment or imperfect calibrations.
 
- 
-
-\section{Conclusion}
-
-
-The PWFS is an extension of the Foucault test knife edge test to two dimensions. By examining the diffraction theory of the Foucault test, which is much simpler than a full pyramid, we gain insight to the physical processes behind the PWFS. In Section~\ref{diffraction} we consolidated the diffraction theory of the knife edge test by Linfoot\cite{linfoot1948theory}, Katzoff\cite{katzoff1971quantitative}, and Wilson\cite{wilson1975wavefront} into a single derivation with uniform notation. Expanding upon their results, we linked phase aberrations in shape of Fourier modes to intensity patterns produced by the knife edge test. The result found for a phase error in the shape of a Fourier mode is an intensity pattern described by the Hilbert transform of the phase function. We considered an example $\cos(nx)$ phase pattern, and mathematically derived that the resulting intensity pattern is proportional to $-\sin(nx)$, which is functionally the derivative of the phase without the dependence on spatial frequency. We confirmed this result by considering the intensity and slope signals from a simulated 3PWFS and 4PWFS. We used this result to motivate the signal processing of the pyramid measurements and introduced a new Slope Map method to handling the 3PWFS signals, which is derived using the centroid of an equilateral triangle. This method provided a stable closed loop correction on the LOOPS testbed.
-
-As a further test of the 3PWFS and slopes maps equations we performed an end to end simulation of an adaptive optics system to compare the performance of the 3PWFS and 4PWFS as well as the Raw Intensity and Slopes Maps signal processing techniques. We found that in the absence of read noise the performance of the wavefront sensors are within 0.01 Strehl. When we included read noise into the simulation, we saw a break in this trend at lower guide star magnitudes, and found a gain of 0.036 Strehl the 3PWFS using Raw Intensity  over the 4PWFS using Slopes Maps at a stellar magnitude of 10. At the same magnitude the 4PWFS using Raw Intensity also out performed the 4PWFS Slopes Maps, but the gain was only 0.0122 Strehl. We conclude that the 3PWFS is a viable wavefront sensor with similar performance in the scope of our study. Our simulations only considered a single modulation radius and $r_0$ of atmospheric turbulence. Further work should explore the respective performances at different turbulence strengths and different modulation radii. 
-
-\section{Discussion}
-
-In the current configuration a 3PWFS and 4PWFS were integrated into CACTI for a performance test. Both PWFS were designed with refractive pyramid optics and had similar sampling across the pyramid pupils. Effort was put into minimizing the differences between each PWFS. Non-common path error was minimized by insuring each pyramid optic had the same PSF on the tip. The performance of each wavefront sensor was found to be and average of 0.02 Strehl at 1.6 $\lambda/D$, 0.02 Strehl at 3.25 $\lambda/D$, and 0.03 Strehl at 5 $\lambda/D$ modulation. The performance of the PWFS are too similar to decouple any differences from systematic errors such as misalignment or imperfect calibrations. Our results agree with Schatz et al, that the performance of the 3PWFS is comparable to the 4PWFS. 
-
-The results of our experiment showed the gain in performance by decreasing the modulation radius. It has been shown that increasing the modulation radius decreases the sensitivity of the PWFS \cite{correia2020performance}. Previous work on the theoretical sensitivity of the PWFS showed that the loss of sensitivity is maximum at the spatial frequencies at and below the spatial frequency of the modulation radius\cite{guyon2005}$^,$\cite{verinaud2004nature}. The result should be that the sensitivity of low order modes should be decreased, and that the sensitivity of high order modes is mostly preserved. Our results are consistent with these findings that the AO system should be run at as small of a modulation radius as possible for better sensitivity. 
-
-
-% The power of low order modes of the turbulence screens used by CACTI are filtered so that the full stroke of the DM is not used. \jrmcom{This isn't quite right.  The power at low spatial frequencies is lower than it would be in unfiltered Kolmogorov turb, but it is still higher than at higher spatial frequencies.  That is, the filter does not set it to 0.} Most of the power in the spatial frequencies of the turbulence screen power spectrum are mid to high spatial frequencies. \jrmcom{So this statement might be too big:}Our results suggest that modulating decreases sensitivity across all spatial frequencies, and that the AO system should be run at as small of a modulation radius as possible. 
-
-
-
-\section{Conclusion}
-
-We have presented the design of the Comprehensive Adaptive Optics and Coronagraph Test Instrument (CACTI), a new ExAO testbed designed with the flexibility to support visiting instruments and to be easily re-configurable to perform multiple experiments. In the current configuration a visiting 3PWFS was integrated into CACTI for a performance test. Non-common path error was minimized by insuring each pyramid optic had the same PSF on the tip. We demonstrated the operation of the 3PWFS by closing the AO loop on simulated turbulence on CACTI. The performance of each wavefront sensor was determined by measuring the relative Strehl ratio of the closed loop PSF with the reference PSF. The Strehl ratio was calculated by a Strehl calculation tool developed for CACTI in Python.  The difference in Strehl for the 3PWFS compared to the 4PWFS varies on average by +0.02 Strehl at 1.6 $\lambda/D$, +0.02 Strehl at +3.25 $\lambda/D$, and +0.03 Strehl at 5 $\lambda/D$ modulation. Our experiment showed the gain in performance by decreasing the modulation radius. Decreasing the modulation radius from 3.25 $\lambda/D$ to  1.6 $\lambda/D$ resulted in a gain in Strehl of 0.34 for the 3PWFS and 0.38 for the 4PWFS. From our results we conclude that the 3PWFS has comparable performance to the 4PWFS, and that an AO system should be run with as small of a modulation radius as possible to optimize performance. 
-
-
-
-
-
+The results of our experiment showed the gain in performance by decreasing the modulation radius. It has been shown that increasing the modulation radius decreases the sensitivity of the PWFS \citep{correia2020performance}. Previous work on the theoretical sensitivity of the PWFS showed that the loss of sensitivity is maximum at the spatial frequencies at and below the spatial frequency of the modulation radius \citep{guyon2005} ,\citep{verinaud2004nature}. The result should be that the sensitivity of low order modes should be decreased, and that the sensitivity of high order modes is mostly preserved. Our results are consistent with these findings that the AO system should be run at as small of a modulation radius as possible for better sensitivity. 
