@@ -1,12 +1,12 @@
 \chapter{Design of the MagAO-X Wavefront Sensor}\label{CH5}
 
-the University of Arizona Extreme Wavefront Control Lab (XWCL), has developed the Magellan Extreme Adaptive Optics system (MagAO-X) for the Magellan Clay Telescope at Las Campanas Observatory, Chile \citep{males2020magao}. MagAO-X had its first light commissioning run in December 2019. The MagAO-X system uses a combination of a 2048 actuator deformable mirror, high-speed pyramid wavefront sensor, and high contrast coronagraph to correct for atmospheric turbulence and suppress starlight at speeds greater than 2000 times a second. The instrument is designed to achieve Strehl ratios of greater than 70$\%$ with raw contrast of less than $10^{-4}$ at separations between 1 and 10 $\lambda/D$.\citep{males2018magao} Working off of lessons learned from MagAO \citep{close2018status}, and SCExAO \citep{jovanovic2015subaru}, MagAO-X is optimized for high impact science cases, such as a survey of nearby newly formed accreting planets in H$\alpha$ \citep{males2020magao}.
+The University of Arizona Extreme Wavefront Control Lab (XWCL), has developed the Magellan Extreme Adaptive Optics system (MagAO-X) for the Magellan Clay Telescope at Las Campanas Observatory, Chile \citep{males2020magao}. MagAO-X had its first light commissioning run in December 2019. The MagAO-X system uses a combination of a 2048 actuator deformable mirror, high-speed pyramid wavefront sensor, and high contrast coronagraph to correct for atmospheric turbulence and suppress starlight at speeds greater than 2000 times a second. The instrument is designed to achieve Strehl ratios of greater than 70$\%$ at $H-\alpha$ with raw contrast of less than $10^{-4}$ at separations between 1 and 10 $\lambda/D$.\citep{males2018magao} Working off of lessons learned from MagAO \citep{close2018status}, and SCExAO \citep{jovanovic2015subaru}, MagAO-X is optimized for high impact science cases, such as a survey of nearby newly formed accreting planets in H$\alpha$ \citep{males2020magao}.
 
-The MagAO-X system has a two-level split optical table, mounted at the gravity invariant Nasymth platform. Figure \ref{fig:magaox} shows the layout of the MagAO-X system. The table is floated to reduce vibrations, and sealed in dust covers to shield against dust and stray light. The top optical table contains the K-mirror \citep{hedglen2018optical}, the low order ALPAO DM97 woofer deformable mirror, the high order tweeter BMC-2K deformable mirror, and the atmospheric dispersion corrector (ADC). The lower bench contains another ALPAO DM97 DM to correct noncommon path errors in the coronagraphs. There is two Princeton science camera to enable spectral differential imaging \citep{biller_sdi}. MagAO-X has a generalized Lyot coronagraph with a vector Apodizing Phase Plate (vAPP) mask. A four-sided pyramid PWFS provides the high-order wavefront sensing.  In this chapter, we will describe the optical design of the MagAO-X pyramid wavefront sensor and the requirements on performance that drove the design choices.
+The MagAO-X system has a two-level split optical table, mounted at the gravity invariant Nasmyth platform. Figure \ref{fig:magaox} shows the layout of the MagAO-X system. The table is floated to reduce vibrations, and sealed in dust covers to shield against dust and stray light. The top optical table contains the K-mirror to take out field rotation \citep{hedglen2018optical}, the low order ALPAO DM97 woofer deformable mirror, the high order tweeter BMC-2K deformable mirror, and the atmospheric dispersion corrector (ADC). The lower bench contains another ALPAO DM97 DM to correct noncommon path errors in the coronagraphs. There are two Princeton science camera to enable spectral differential imaging \citep{biller_sdi}. MagAO-X has a generalized Lyot coronagraph with a vector Apodizing Phase Plate (vAPP) mask. A four-sided pyramid PWFS provides the high-order wavefront sensing.  In this chapter, we will describe the optical design of the MagAO-X pyramid wavefront sensor and the requirements on performance that drove the design choices.
 
 \begin{figure}
     \centering
-    \includegraphics[width=.8\textwidth]{Chapter Materials/Chapter Five Materials/magaox.jpg}
+    \includegraphics[width=1\textwidth]{Chapter Materials/Chapter Five Materials/magaox.jpg}
     \caption{Solid works model of the MagAO-X system. MagAO-X has a split level design. The woofer and tweeter deformable mirrors as well as the ADC are on the top level. The bottom level has the wavefront sensor, coronagraph and science cameras.}
     \label{fig:magaox}
 \end{figure}
@@ -36,13 +36,13 @@ where $n$ and $n'$ are the refractive indexes of the medium before and after pro
 
 
 
-Tracing the marginal and chief ray using the paraxial raytracing determines important system parameters. Tracing the marginal ray gives the positions of the object and image planes, and the height of the system stops. This includes the entrance and exit pupils of the system which are the images of the aperture stop in the object and image planes. The chief ray passes through the maximum edge of the object and image, and passes through the center of the aperture stop. It gives the object and image sizes as well as the location of the system stops. Figure \ref{fig:chiefray} shows an example ray trace of the marginal and chief ray through a lens with the stop at the lens. 
+Tracing the marginal and chief ray using the paraxial raytracing determines important system parameters. Tracing the marginal ray gives the positions of the object and image spaces, and the height of the system stops. This includes the entrance and exit pupils of the system which are the images of the aperture stop in the object and image planes. The chief ray passes through the maximum edge of the object and image, and passes through the center of the aperture stop. It gives the object and image sizes as well as the location of the system stops. Figure \ref{fig:chiefray} shows an example ray trace of the marginal and chief ray through a lens with the stop at the lens. 
 
 
 \begin{figure}
     \centering
     \includegraphics[width=.6\textwidth]{Chapter Materials/Chapter Three Materials/chiefandmarginal.png}
-    \caption{Diagram of a ray trace for the marginal and cheif ray. The marginal ray starts at the optical axis at the location of the object, and is traced to the maximum edge of the system stop. It crosses the optical axis at the location of the image. The chief ray starts at the object height $h$, crosses the optical axis through the center of the stop, and intersects the maximum height of the image $h'$. }
+    \caption{Diagram of a ray trace for the marginal and chief ray. The marginal ray starts at the optical axis at the location of the object, and is traced to the maximum edge of the system stop. It crosses the optical axis at the location of the image. The chief ray starts at the object height $h$, crosses the optical axis through the center of the stop, and intersects the maximum height of the image $h'$. }
     \label{fig:chiefray}
 \end{figure}
 
@@ -64,7 +64,7 @@ Once the first-order properties of the system are determined, the next step in t
     \label{fig:Seidel}
     \end{figure}
     
-The first few aberrations can be mitigated by the optical design. These terms are first are: defocus, tip/tilt, and piston. The Seidel equations describe the third order terms which are: coma, astigmatism, spherical, field curvature, and distortion. The corresponding wave aberration equations that describe each aberration are found in Table \ref{tab:aberrations}. There are higher-order variants of these polynomials, for example, fifth-order astigmatism, but in general, these terms are harder to correct and are compensated with first and third-order terms. Optical design programs have tools to help the designer reduce and balance the aberrations. Zemax OpticStudio outputs ray fan diagrams that describe the total OPD amplitude and shape as a function of $\rho$. Individual Seidel coefficients for specific aberrations can be minimized through the system optimization Merit function. Different weights in the merit function can prioritize the correction of one aberration over others. 
+The first-order and the Seidel aberrations can be mitigated by the optical design. The first-order terms are: defocus, tip/tilt, and piston. The Seidel equations describe the third order terms which are: coma, astigmatism, spherical, field curvature, and distortion. The corresponding wave aberration equations that describe each aberration are found in Table \ref{tab:aberrations}. There are higher-order variants of these polynomials, for example, fifth-order astigmatism, but in general, these terms are harder to correct and are compensated with first and third-order terms. Optical design programs have tools to help the designer reduce and balance the aberrations. Zemax OpticStudio outputs ray fan diagrams that describe the total OPD amplitude and shape as a function of $\rho$. Individual Seidel coefficients for specific aberrations can be minimized through the system optimization Merit function. Different weights in the merit function can prioritize the correction of one aberration over others. 
 
 
 \begin{table}
@@ -82,7 +82,7 @@ The first few aberrations can be mitigated by the optical design. These terms ar
 				
 		\end{tabular}
 	\end{center}
-	\caption{Caption}
+	\caption{Table of the aberrations and the corresponding wave aberration equations.}
 	\label{tab:aberrations}
 \end{table}
 
@@ -101,7 +101,7 @@ Spherical aberration is defined as the variation of focus by the position in the
     \label{fig:spherical}
 \end{figure}
 
-There are several ways spherical aberration can be minimized in an optical system. The simplest method is to balance spherical aberration with defocus. This method is not ideal because there can be significant residual wavefront error. For a custom lens design  we split a single lens into a doublet to lessen the curvature of the surfaces. Lens splitting reduces the total third-order spherical aberration to a third or a fourth of that from a single lens \citep{sasianclass}. Changing the shape factor of the lens changes the curvature and thickness of the lens while maintaining focal length. The shape factor is a measure of the overall curvature of a lens and is calculated using,
+There are several ways spherical aberration can be minimized in an optical system. The simplest method is to balance spherical aberration with defocus. This method is not ideal because there can be significant residual wavefront error. For a custom lens design we can split a single lens into a doublet to lessen the curvature of the surfaces. Lens splitting reduces the total third-order spherical aberration to a third or a fourth of that from a single lens \citep{sasianclass}. Changing the shape factor of the lens changes the curvature and thickness of the lens while maintaining focal length. The shape factor is a measure of the overall curvature of a lens and is calculated using,
 
 \begin{equation}
     X=\frac{C_1-C_2}{C_1+C_2}
@@ -130,11 +130,11 @@ Chromatic aberration is caused by the wavelength dependence of the index of refr
 \begin{figure}
     \centering
     \includegraphics[width=.7\textwidth]{Chapter Materials/Chapter Three Materials/focalshift.png}
-    \caption{Diagram of the chromatic focal shift of a singlet lens made of BK-7 glass. The shift in focal length due to chromatic aberration is plotted agains wavelength.}
+    \caption{Diagram of the chromatic focal shift of a singlet lens made of BK-7 glass. The shift in focal length due to chromatic aberration is plotted against wavelength.}
     \label{fig:focalshift}
 \end{figure}
 
-To correct chromatic aberration we try and balance the chromatic focal shift by constructing a lens that places two or more wavelengths at the same focal length. Chromatic aberration is compensated by constructing achromatic doublet and triplet lenses. An achromatic doublet is a pair of lenses, typically one positive lens and one negative lens, made of different materials that form a single lens. These lenses can be air-spaced or cemented together. An example of an achromatic doublet designed in Zemax is shown in Figure \ref{fig:crownflint}.
+To correct chromatic aberration we try and balance the chromatic focal shift by constructing a lens that places two or more wavelengths at the same focal length. Chromatic aberration is compensated by constructing achromatic doublet and triplet lenses. An achromatic doublet is a pair of lenses, typically one positive lens and one negative lens, made of different materials that form a composite lens. These lenses can be air-spaced or cemented together. An example of an achromatic doublet designed in Zemax is shown in Figure \ref{fig:crownflint}.
 
 \begin{figure}
     \centering
@@ -188,7 +188,7 @@ where $P_1$,$P_2$, and $P_3$ are the dispersion's of each of the lenses in the t
 \begin{figure}
     \centering
     \includegraphics[width=.6\textwidth]{Chapter Materials/Chapter Three Materials/tripletPV.png}
-    \caption{Dispersion $P$ versus Abbe number $\nu_d$ for an achromatic triplet made from N-PK51, N-KZFS4, and N-SF15 glass types.} 
+    \caption{Dispersion $P$ versus Abbe number $\nu_d$ for an achromatic triplet made from N-PK51, N-KZFS4, and N-SF15 glass types \citep{kingslake2009lens}.} 
     \label{fig:tripletPV}
 \end{figure}
 
@@ -197,7 +197,7 @@ The resulting chromatic focal shift diagram for a triplet lens has three zero po
 \begin{figure}
     \centering
     \includegraphics[width=.6\textwidth]{Chapter Materials/Chapter Three Materials/tripleapochromat.PNG}
-    \caption{Chromatic focal shift diagram for an apochromatic triplet lens. The first and secondary chromatic aberrations are compensated in the lens creating three wavelengths where a zero chromatic focal shift occurs.}
+    \caption{Chromatic focal shift diagram for an apochromatic triplet lens. The first and secondary chromatic aberrations are compensated in the lens creating three wavelengths where a zero chromatic focal shift occurs \citep{sasian2017method}.}
     \label{fig:apochromat}
 \end{figure}
 
@@ -207,17 +207,18 @@ The achromatic triplet is an ideal camera lens for the PWFS. A PWFS operates ove
 
 \section{System Design}
 
-The PWFS of the MagAO-X system consists of an achromatic pyramid, a camera lens, and an OCAM$^2$K EMCCD detector. The requirements on the MagAO-X PWFS were a needed size and separation of the pupils, and restricted system size to fit on the optical table. The MagAO-X pyramid wavefront sensor is designed to operate from 600-1000nm bandwidth and a field of view of two arcseconds. Figure \ref{fig:bandpass} is the bandpass of the MagAO PWFS that we matched for the MagAO-X PWFS. A new camera lens was designed in Zemax to meet the requirements of the MagAO-X system. 
+The PWFS of the MagAO-X system consists of an achromatic pyramid, a camera lens, and an OCAM$^2$K EMCCD detector. The requirements on the MagAO-X PWFS were a needed size and separation of the pupils, and restricted system size to fit on the optical table. The MagAO-X pyramid wavefront sensor is designed to operate from 600-1000nm bandwidth and a field of view of two arcseconds. Figure \ref{fig:bandpass} is the bandpass of the MagAO PWFS that we matched for the MagAO-X PWFS, \citep{morzinski2014magao}. A new camera lens was designed in Zemax to meet the requirements of the MagAO-X system. 
 	
 	
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.5\textwidth]{Chapter Materials/Chapter Three Materials/MagAOBandpass_updated.jpg}
-	\caption{Transmission versus wavelength for the V, R, and I bandpasses. The overlaid black curve is MagAO-X pyramid wavefront sensor bandpass that is matched from MagAO,(\citep{morzinski2014magao}).}
+	\caption{Transmission versus wavelength for the V, R, and I bandpasses. The overlaid black curve is MagAO-X pyramid wavefront sensor bandpass that is matched from MagAO.}
 	\label{fig:bandpass}
 \end{figure}
 	
- The requirements of the MagAO-X PWFS are listed in Table \ref{tab:requirements}. The OCAM$^2$K is used in the 2x2 binning mode, which gives an effective pixel size of 48 $\mu$m. This allows the wavefront sensor to be run at speeds up to 3.6 kHz. The pupil size is 56 pixels in diameter. The number of pixels in each of the pupils sets the sampling of the wavefront which determines the number of modes correctable by the AO system and the fitting error in the AO error budget. This sampling was chosen to meet the performance goals of the MagAO-X wavefront control. The pupil separation of 60 pixels was chosen to maximize space on the OCAM$^2$K detector. Figure \ref{fig:PWFSpupils} summarizes the desired layout for the PWFS pupils on the OCAM$^2$K detector. 
+ The requirements of the MagAO-X PWFS are listed in Table \ref{tab:requirements}. The OCAM$^2$K is used in the 2x2 binning mode, which gives an effective pixel size of 48 $\mu$m. This allows the wavefront sensor to be run at speeds up to 3.6 kHz. The pupil size is 56 pixels in diameter when the OCAM$^2$K is in the 2 by 2 binning mode. The number of pixels in each of the pupils sets the sampling of the wavefront which determines the number of modes correctable by the AO system and the fitting error in the AO error budget. This sampling was chosen to meet the performance goals of the MagAO-X wavefront control. The pupil separation of 60 pixels was chosen to maximize space on the OCAM$^2$K detector. Figure \ref{fig:PWFSpupils} summarizes the desired layout for the PWFS pupils on the OCAM$^2$K detector. 
 	
 \begin{table}
 	\begin{center}
@@ -239,15 +240,15 @@ The PWFS of the MagAO-X system consists of an achromatic pyramid, a camera lens,
 \begin{figure}
     \centering
     \includegraphics[width=.5\textwidth]{Chapter Materials/Chapter Three Materials/MagAOXpupils.png}
-    \caption{Diagram of the desired pupil layout on the OCAM$2$K detector produced by the PWFS. The pupils fall on a gril of 128 by 128 pixels, each pixel having a size of 48 $\mu m$. Each pupil is designed have a diameter of 56 pixels across, and seperated by 60 pixels center to center.}
+    \caption{Diagram of the desired pupil layout on the OCAM$2$K detector produced by the PWFS. The pupils fall on a grid of 128 by 128 pixels, each pixel having a size of 48 $\mu m$. Each pupil is designed have a diameter of 56 pixels across, and separated by 60 pixels center to center.}
     \label{fig:PWFSpupils}
 \end{figure}
     
-The tolerance on the pupil sizes is 1/10$^{th}$ of a pixel, which is 2.4 $\mu m$. Due to the tight tolerances on pupil size, and the large bandpass of the system a custom achromatic triplet lens was designed as the camera lens for the MagAO-X PWFS. The triplet lens allows for the minimization of spherical aberration by allowing for the reduction in curvature of each lens in the triplet while maintaining the effective focal length needed to meet the magnification requirements. Transverse spherical aberration, which causes a difference in magnification as a function of aperture is important to mitigate in this system because the size of each pupil needs to be uniform. Similarly, lateral chromatic aberration needs to be controlled, because the size of the pupils cannot vary over the bandpass.
+The tolerance on the pupil sizes is 1/10$^{th}$ of a pixel, which is 2.4 $\mu m$. This tolerance was motivated by the desire to run the PWFS system using the Slopes Maps equation. The Slopes Maps calculation is highly sensitive to misalignment including sub pixel shifts. Due to the tight tolerances on pupil size, and the large bandpass of the system a custom achromatic triplet lens was designed as the camera lens for the MagAO-X PWFS. The triplet lens allows for the minimization of spherical aberration by allowing for the reduction in curvature of each lens in the triplet while maintaining the effective focal length needed to meet the magnification requirements. Transverse spherical aberration, which causes a difference in magnification as a function of aperture is important to mitigate in this system because the size of each pupil needs to be uniform. Similarly, lateral chromatic aberration needs to be controlled, because the size of the pupils cannot vary over the bandpass.
 	
 	
 \subsection{Pyramid Design}
-MagAO-X uses an excellent achromatic pyramid with a 5 $\mu m$ tip. The pyramid used in the PWFS is a double pyramid, consisting of two four-sided prisms aligned back to back. Details of the design done by \cite{tozzi2008double} are summarized here. A picture of the pyramid is shown in Figure \ref{fig:pyramid}. The total deviation angle needed for the pyramid wavefront sensor is hard to manufacture. Combining two pyramids makes the polishing process easier and at the same time allows us to control chromatic aberrations by using two different glass types. The glass types were chosen using an I.D.L. optimization routine that selected glass combinations from the Shott and Ohara catalog that would give a suitable deflection angle of the double pyramid. The front prism is made from Shott N-SK11, $n_d=1.56384$ and $\nu_D=60.80$, and the back prism is made from Schott N-PSK53, $n_d=1.61800$ and $\nu_D=63.39$. The full diagram of the achromatic double pyramid is found in Figure \ref{fig:fullpyramidprism}.
+MagAO-X uses an excellent achromatic pyramid with a 5 $\mu m$ tip. The pyramid used in the PWFS is a double pyramid, consisting of two four-sided prisms aligned back to back. Details of the design done by \cite{tozzi2008double} are summarized here. A picture of the pyramid is shown in Figure \ref{fig:pyramid}. The total deviation angle needed for the pyramid wavefront sensor is hard to manufacture. Combining two pyramids makes the grinding process easier because the angle of the pyramids does not need to be as flat. The double pyramid allows us to control chromatic aberrations by using two different glass types. The glass types were chosen using an I.D.L. optimization routine that selected glass combinations from the Shott and Ohara catalog that would give a suitable deflection angle of the double pyramid. The front prism is made from Shott N-SK11, $n_d=1.56384$ and $\nu_D=60.80$, and the back prism is made from Schott N-PSK53, $n_d=1.61800$ and $\nu_D=63.39$. The full diagram of the achromatic double pyramid is found in Figure \ref{fig:fullpyramidprism}.
 
 
 
@@ -263,7 +264,7 @@ MagAO-X uses an excellent achromatic pyramid with a 5 $\mu m$ tip. The pyramid u
 \begin{figure}
     \centering
     \includegraphics[width=.6\textwidth]{Chapter Materials/Chapter Three Materials/pyramidprismfull.JPG}
-    \caption{Drawing of the optical design of the MagAO-X achromatic double pyramid. The pyramid has a high precision entrance pyramid (in blue) made of N-SK11 glass. The exit pyramid (in red) is made of N-PSK53 glass. The angles of the pyramid are designed so that the total deviation of the pair is small.}
+    \caption{Drawing of the optical design of the MagAO-X achromatic double pyramid. The pyramid has a high precision entrance pyramid (in blue) made of N-SK11 glass. The exit pyramid (in red) is made of N-PSK53 glass. The angles of the pyramid are designed so that the total deviation of the pair is small \citep{tozzi2008double}.}
     \label{fig:fullpyramidprism}
 \end{figure}
 	
@@ -275,7 +276,7 @@ A design of the wavefront sensor was done in Zemax OpticStudio. An F/69 beam cre
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=.5\textwidth]{Chapter Materials/Chapter Three Materials/Pupils6-20-18.jpg}
+	\includegraphics[width=.9\textwidth]{Chapter Materials/Chapter Three Materials/Pupils6-20-18.jpg}
 	\caption{Beam footprint diagram at the image plane. Each colored circle is a pupil.}
 	\label{fig:footprint}
 \end{figure}
@@ -304,7 +305,7 @@ The size and separation of the pupils on the detector directly affect the perfor
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=.8\textwidth]{Chapter Materials/Chapter Three Materials/cameralenstripletSPEC.jpg}
-	\caption{Lens schematic of the achromatic triplet in zemax. The radius of curvatures of each surface are listed under the Radius column. The material and thickness of each lens is given in under Material and Thick columns.  }
+	\caption{Lens schematic of the achromatic triplet in Zemax. The radius of curvatures of each surface are listed under the Radius column. The material and thickness of each lens is given in under Material and Thick columns.  }
 	\label{fig:triplet}
 \end{figure}
 
@@ -429,7 +430,7 @@ The mount of the pyramid optic has a custom target that aligns with the pyramid 
 
 \begin{figure}
     \centering
-    \includegraphics{Chapter Materials/Chapter Three Materials/MagAOXpupil5LD.png}
+    \includegraphics[width=.5\textwidth]{Chapter Materials/Chapter Three Materials/MagAOXpupil5LD.png}
     \caption{The MagAO-X pyramid wavefront sensor pupils with 5 $\lambda/D$ modulation. The spiders and central obscuration are from the aperture of the Magellan Telescope.  }
     \label{fig:MagAOXpupils}
 \end{figure}
@@ -438,7 +439,7 @@ The MagAO-X system had first light in December 2019. The MagAO-X team were succe
 
 \begin{figure}
     \centering
-    \includegraphics{Chapter Materials/Chapter Three Materials/Magaoxonsky.jpg}
-    \caption{The simulated perfect PSF for the MagAO-X system on the left compared to the closed loop on-sky PSF on the right.}
+    \includegraphics[width=.8\textwidth]{Chapter Materials/Chapter Three Materials/Magaoxonsky.jpg}
+    \caption{The simulated perfect PSF for the MagAO-X system on the left compared to the closed loop on-sky PSF on the right \citep{males2020magao}.}
     \label{fig:magaoxonsky}
 \end{figure}

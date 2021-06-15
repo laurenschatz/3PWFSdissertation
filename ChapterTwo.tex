@@ -1,14 +1,14 @@
 \chapter{The Telescope Signal}\label{CH2}
 
- The goal of an adaptive optics (AO) system is to correct for the aberrations caused by atmospheric turbulence. It is important to first understand what image we would expect on our detector for a perfectly corrected diffraction-limited system. In this chapter, we will use radiative transfer and diffraction to determine what the intensity pattern on our detector will be from a star, and an estimate of the number of photons we can expect from a star of a given magnitude. We then describe photon noise, which affects AO system performance, and influences how the AO system is operated on-sky. The point spread function (PSF) of a diffraction-limited system is then described, and we investigate how aberrations from turbulence degrade the PSF. Lastly, we describe the basic operation of an AO system and how it is used to compensate for atmospheric turbulence.
+ The goal of an adaptive optics (AO) system is to correct for the aberrations caused by atmospheric turbulence. It is important to first understand what image we would expect on our detector for a perfectly corrected diffraction-limited system. In this chapter, we will use radiative transfer and diffraction to determine what the intensity pattern on our detector will be from a star, and an estimate of the number of photons we can expect from a star of a given magnitude. Photon noise is then described, which affects AO system performance, and influences how the AO system is operated on-sky. The point spread function (PSF) of a diffraction-limited system is then described, and we investigate how aberrations from turbulence degrade the PSF. Lastly, we describe the basic operation and error budget of an AO system and how it is used to compensate for atmospheric turbulence. 
 
 \section{Estimating the Photon Count}\label{phcount}
 
-We model light as an electromagnetic wave, with a characteristic complex amplitude $A$, wavelength $\lambda$, direction $\hat{a}$, and phase $\phi$. The phase is given by $\phi= \frac{2\pi}{\lambda}*OPD$, where OPD is the optical path difference. A wave with no aberrations has an OPD=0, and the phase term disappears. Light traveling from infinity, like that of stars, is described by a plane wave $U=Ae^{i(k\dot r-\omega t+ \phi)}\hat{a}$. Light spans a spectrum of wavelengths that are broken up into categories based on different proprieties of the radiation at those wavelengths. The electromagnetic spectrum spans from $\lambda=10^{-12}$-m and smaller for gamma radiation, out to wavelengths of greater than $\lambda=10^{-1}$-m for radio waves. Adaptive optics systems are designed to work in the visible spectrum (380-nm to 700-nm) out to near-infrared (700-nm to 5-$\mu$m).
+We model light as an electromagnetic wave, with a characteristic complex amplitude $A$, wavelength $\lambda$, direction $\hat{a}$, and phase $\phi$. The phase is given by $\phi= \frac{2\pi}{\lambda}*OPD$, where OPD is the optical path difference. A wave with no aberrations has an OPD=0, and the phase term disappears. Light traveling from infinity, like that of stars, is described by a plane wave $U=Ae^{i(k \cdot \vec{r}-\omega t+ \phi)}\hat{a}$. Where $k$ is the wavenumber which is equal to $\frac{2 \pi}{lambda}$, $A$ is the amplitude, $\hat{a}$ is the direction of propagation, and $\omega$ is the angular frequency. Light spans a spectrum of wavelengths that are broken up into categories based on different proprieties of the radiation at those wavelengths. The electromagnetic spectrum spans from $\lambda=10^{-12}$-m and smaller for gamma radiation, out to wavelengths of greater than $\lambda=10^{-1}$-m for radio waves. Adaptive optics systems are designed to work in the visible spectrum (380-nm to 700-nm) out to near-infrared (700-nm to 5-$\mu$m).
 
 
 
-Stars approximately exhibit black-body radiation, which is when the power spectrum of the emitted radiation has a characteristic shape determined by the temperature of the star. We can determine the expected number of photons on our telescope primary mirror from a star by integrating Plank's Law over a wavelength bandpass. Plank's Law gives the radiant exitance $[\frac{W}{sr*m^3}]$ of electromagnetic radiation emitted by a black-body in thermal equilibrium. We need the energy per unit area radiated by black-body, or the irradiance flux density $[\frac{W}{m^2}]$. To find the flux density we integrate the radiant exitance over a wavelength range and the unit solid angle. The irradiance flux density, $I_e$ is given by,
+Stars approximately exhibit black-body radiation, which is when the power spectrum of the emitted radiation has a characteristic shape determined by the temperature of the star. We can determine the expected number of photons on our telescope primary mirror from a star by integrating Plank's Law over a wavelength bandpass. Plank's Law gives the spectral radiant exitance $[\frac{W}{sr*m^3}]$ of electromagnetic radiation emitted by a black-body in thermal equilibrium. We need the energy per unit area radiated by black-body, or the irradiance flux density $[\frac{W}{m^2}]$. To find the flux density we integrate the radiant exitance over a wavelength range and the unit solid angle. The irradiance flux density, $I_e$ is given by,
 
 \begin{equation}
     I_e=\int_{0}^{2pi} d\phi \int_{0}^{\frac{\pi}{2}} \cos(\theta)\sin(\theta)d\theta \int_{\lambda_{min}}^{\lambda_{max}} \frac{2hc^2}{\lambda^5}\frac{1}{exp(\frac{hc}{\lambda k_B T})-1} d\lambda
@@ -36,7 +36,7 @@ Where $r_{E}$ is the distance from the source to Earth. Typically we do not need
     \label{magnitude}
 \end{equation}
 
- We multiply the flux by the surface area of the primary mirror of the telescope to find the power which is defined as the collected energy per second
+ We multiply the flux by the surface area of the primary mirror of the telescope to find the power which is defined as the collected energy per second.
 
 \begin{equation}
     P=F_{E}*\pi*r_T^2
@@ -57,7 +57,7 @@ where $\lambda$ is the mean wavelength in the bandpass. Dividing the power by th
 This is an ideal estimate, as it assumes all photons from the star in that bandpass reach the instrument. The actual Flux incident on the telescope includes factors to account for the transmission of Earth's atmosphere, the transmission of all the optical components in the system, and the detector efficiency. 
 
 
-\section{Photon Noise}
+\section{Photon Noise}\label{PhotNoise}
 
 The counting of photons is a random process described by the Poisson distribution. The error on the measurement of photon count is called photon noise and is the dominant error in a pyramid wavefront sensor error budget. Suppose we are counting photons over a time $T$, in discrete intervals $dt$. The photon rate of emission by the source is $v$, in units of [photons/second]. The average number of photons counted is $<m>=T/dt * vdt=Tv$. The probability of counting $m$ number of photons in the time interval $T$ is,
 
@@ -71,7 +71,7 @@ A pyramid wavefront sensor measures the wavefront error using the intensity on a
 
 \section{The Point Spread Function}
 
- Geometric optics describes the propagation of light as rays and assumes one point in the object is mapped to one point in the image. In geometric optics, a perfect point source object would form a perfect point image \citep{hecht2002optics}. In reality, the size of an imaged point source is finite and determined by the diffraction of light from the size, shape, and power in the aperture of our system. Diffractive optics assumes that each point in the object emits a spherical wave, and the pattern at the observation point is determined by the interference of each of those wavelets \citep{goodman2005introduction}. There are approximations to the diffractive theory, and in this section, we assume the Fraunhofer approximation, which assumes the plane of observation is in the focal plane. The Fraunhofer equation to find a field $U_z$ given a starting field $U_0$ with aperture function $T_{ap}$ is given by equation \ref{Fraunhofer}.
+ Geometric optics describes the propagation of light as rays and assumes one point in the object is mapped to one point in the image. In geometric optics, a perfect point source object would form a perfect point image \citep{hecht2002optics}. In reality, the size of an imaged point source is finite and determined by the diffraction of light from the size and shape of the aperture of our system. Diffractive optics assumes that each point in the object emits a spherical wave, and the pattern at the observation point is determined by the interference of each of those wavelets \citep{goodman2005introduction}. There are approximations to the diffractive theory, and in this section, we assume the Fraunhofer approximation, which assumes the plane of observation is in the focal plane. The Fraunhofer equation to find a field $U_z$ given a starting field $U_0$ with aperture function $T_{ap}$ is given by equation \ref{Fraunhofer}.
 
 \begin{equation}
 U_z=\frac{e^{ikz}}{ikz}e^{i\frac{\pi (x^2+y^2)}{\lambda z}}\int_{\infty} U_0(\xi,\zeta)T_{ap}e^{\frac{-2\pi i(x\xi+y\zeta)}{\lambda z}}d\xi d\zeta
@@ -80,9 +80,9 @@ U_z=\frac{e^{ikz}}{ikz}e^{i\frac{\pi (x^2+y^2)}{\lambda z}}\int_{\infty} U_0(\xi
 
 The values $\xi$ and $\zeta$ are the spatial frequencies associated with the spatial coordinates x and y. The Fraunhofer diffraction equations calculate the Fourier transform of the field times the aperture function.
 
-A light wave consists of oscillating electric and magnetic fields. In diffraction theory, we consider the propagation and diffraction of the electric field component, and refer to it simply as `the field'. The methodology of solving diffraction problems is to start with a source, propagate the wavefront from the source to the plane of diffraction to find $U^-$, the field just before the aperture. We then solve for $U^+$ the field after the aperture and then apply Fraunhofer diffraction to find $U_z$, the field at the observation plane some far distance $z$ from the aperture. If the source is a perfect point source the field at the focal plane of the imaging system is defined as the point spread function (PSF)
+A light wave consists of oscillating electric and magnetic fields. In diffraction theory, we consider the propagation and diffraction of the electric field component, and refer to it simply as `the field'. The methodology of solving diffraction problems is to start with a source, propagate the wavefront from the source to the plane of diffraction to find $U^-$, the field just before the aperture. We then solve for $U^+$ the field after the aperture and then apply Fraunhofer diffraction to find $U_z$, the field at the observation plane some far distance $z$ from the aperture. If the source is a perfect point source the intensity at the focal plane of the imaging system is defined as the point spread function (PSF).
 
-To start we assume that a star is far enough away to be considered a point source. Point sources emit spherical waves, but a point source at a great enough distance that we can approximate the arriving wave as a plane wave given by $U^-$ when it reaches the aperture.The telescope aperture is the diffractive plane in the system and can be modeled as a circular binary mask. The electric field after diffraction through the aperture is $U^+$ and is propagated to find the electric field at the image plane $U_z$. A diagram of this set up is given in Figure \ref{fig:propagation}. 
+To start we assume that a star is far enough away to be considered a point source. Point sources emit spherical waves, but a star is a point source at a great enough distance that we can approximate the arriving wave as a plane wave when it reaches the aperture. The telescope aperture is the diffractive plane in the system and for simplicity can be modeled as a circular binary mask. The electric field after diffraction through the aperture is $U^+$ and is propagated to find the electric field at the image plane $U_z$. A diagram of this set up is given in Figure \ref{fig:propagation}. 
 
 \begin{figure}
     \centering
@@ -91,7 +91,7 @@ To start we assume that a star is far enough away to be considered a point sourc
     \label{fig:propagation}
 \end{figure}
 
-$U_0^-$ is modeled as a perfect plane wave in this system. For a plane wave, we the phase term $\phi$ is equal to zero, and we set the amplitude of the wave equal to one. The result is that the electric field is $U_0^-=1$. The PSF is then the Fourier Transform of the aperture function. The aperture function of a telescope is modeled by a circle function with diameter D, $circ(\frac{\sqrt{x^2+y^2}}{D})$, which by has a known Fourier transform that can be solved for by defining $r=\sqrt{x^2+y^2}$ and $\rho=\frac{r}{\lambda z}$. The Fourier Transform of a circ function is:
+$U_0^-$ is modeled as a perfect plane wave in this system. For a plane wave, the phase term $\phi$ is equal to zero, and we set the amplitude of the wave equal to one. The result is that the electric field is $U_0^-=1$. The PSF is then the Fourier Transform of the aperture function. The aperture function of a telescope is modeled by a circle function with diameter D, $circ(\frac{\sqrt{x^2+y^2}}{D})$, which by has a known Fourier transform that can be solved for by defining $r=\sqrt{x^2+y^2}$ and $\rho=\frac{r}{\lambda z}$. The Fourier Transform of a circ function is:
 
 % \begin{equation}
 %     h_i(x_i)= \mathcal{F}^{-1}[H_f(\xi_f)] =
@@ -133,7 +133,7 @@ $U_0^-$ is modeled as a perfect plane wave in this system. For a plane wave, we 
     I(r)=A^2 {\pi^2\left(\frac{D}{2}\right)}^4 \text{somb}^2\left(\frac{2r}{\lambda z}\right)
 \end{equation}
 
-\noindnet which is the Airy pattern as shown in Figure \ref{fig:Airy}.A. Figure \ref{fig:Airy}.B is the profile plot of the Airy pattern in log scale. Most of the intensity in the Airy pattern is concentrated in the core. For more complicated apertures the PSF can be calculated in simulation by modeling the aperture as a binary mask and taking the 2D Fourier transform. The simulation can also include the calculations from Section \ref{phcount} by setting the sum of the intensity in the image to the estimated number of photons.
+\noindent which is the Airy pattern as shown in Figure \ref{fig:Airy}.A. Figure \ref{fig:Airy}.B is the profile plot of the Airy pattern in log scale. Most of the intensity in the Airy pattern is concentrated in the core. For more complicated apertures the PSF can be calculated in simulation by modeling the aperture as a binary mask and taking the 2D Fourier transform. The simulation can also include the calculations from Section \ref{phcount} by setting the sum of the intensity in the image to the estimated number of photons.
 
 \begin{figure}
     \centering
@@ -201,7 +201,7 @@ R_n^m(\rho)= \left\{
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth]{Chapter Materials/Introduction Materials/Introduction Figures/zernikes.jpeg}
-    \caption{The first 15 Zernike polynomials.}
+    \caption{The first 15 Zernike polynomials \citep{Hsieh:20}.}
     \label{fig:zernikes}
 \end{figure}
 
@@ -209,7 +209,7 @@ R_n^m(\rho)= \left\{
 \begin{figure}
     \centering
     \includegraphics[width=0.75\textwidth]{Chapter Materials/Introduction Materials/Introduction Figures/ZernikePSFs.png}
-    \caption{The resulting PSFs from different Zernike modal wavefront errors.}
+    \caption{The resulting PSFs from different Zernike modal wavefront errors \citep{masalehdan2010modeling}.}
     \label{fig:zernikePSFs}
 \end{figure}
 
@@ -217,7 +217,7 @@ R_n^m(\rho)= \left\{
 %%%% 
 
 
-Earth’s atmosphere is divided into layers that have different temperatures. At the boundary between two layers, the temperature gradient causes a shearing effect that results in turbulence. The tropopause at a height of about 10-km contributes the largest effect of turbulence on image quality. We describe the structure of atmospheric turbulence using the Kolmogorov model. In this model, the turbulence is described as eddies that have a characteristic outer scale $L_0$ and dissipate heat by breaking into smaller and smaller turbulent cells. Each of these cells has a slightly different index of refraction, and the inhomogeneities in the refractive index impart phase errors on the wavefront. The term $r_0$ is the Fried parameter, and it is defined as the coherence length at which the wavefront error over a circle of radius $r_0$ is 1 radian \citep{roddier1999adaptive}. The Fried parameter is used to describe the strength of the distortion imparted by turbulence.  
+Earth’s atmosphere is divided into layers that have different temperatures. At the boundary between two layers, the temperature gradient causes a shearing effect that results in turbulence. We describe the structure of atmospheric turbulence using the Kolmogorov model. In this model, the turbulence is described as eddies that have a characteristic outer scale $L_0$ and break into smaller and smaller turbulent cells. Each of these cells has a slightly different index of refraction, and the inhomogeneities in the refractive index impart phase errors on the wavefront. The term $r_0$ is the Fried parameter, and it is estimated as the coherence length at which the wavefront error over a circle of radius $r_0$ is 1 radian \citep{roddier1999adaptive}. The Fried parameter is used to describe the strength of the distortion imparted by turbulence.  
 
 Turbulence is a statistical process and we are interested in determining the evolution of refractive index at a point $x$ and another point $\Vec{r}$ away. The variance of the difference between the values at these two points is the structure function \citep{hardy}. The structure function of the refractive index is given by the variance of the refractive index at points $x$ and $x+r$.   
 
@@ -228,7 +228,7 @@ Turbulence is a statistical process and we are interested in determining the evo
 The $C_N^2$ value describes the strength of turbulence as a function of altitude. The $C_N^2$ profile is unique to every observatory because of local topology and climate. The $C_N^2$ profile is used to calculate $r_0$ using:
 
 \begin{equation}
-    r_0=[(\frac{2\pi}{\lambda})^2 \int_0^{L_T} C_N^2(z)dz]^{\frac{-3}{5}}
+    r_0=[0.423(\frac{2\pi}{\lambda})^2 \int_0^{L_T} C_N^2(z)dz]^{\frac{-3}{5}}
 \end{equation}
  
  Where $L_T$ is the total path length of the observation. The Fried parameter scales as a function of wavelength, $r_0 \propto \lambda^{\frac{6}{5}}$, and airmass $r_0 \propto \text{AirMass}^{\frac{-5}{3}}$. Airmass is defined as the amount of atmosphere along the line of sight of the observation. The seeing $\epsilon$, is a metric used to describe the amount of distortion caused by turbulence at a given wavelength.
@@ -237,16 +237,16 @@ The $C_N^2$ value describes the strength of turbulence as a function of altitude
      \epsilon=\frac{\lambda}{r_0}
  \end{equation}
  
- The mean square wavefront error over a telescope aperture of diameter D due to atmospheric turbulence is calculated using $r_0$ \citep{noll1976zernike}.
+ The mean square wavefront error in radians squared over a telescope aperture of diameter D due to atmospheric turbulence is calculated using $r_0$ \citep{noll1976zernike}.
  
  \begin{equation}
      \sigma^2=1.03(\frac{D}{r_0})^{\frac{5}{3}}
  \end{equation}
 
 
-Atmospheric turbulence does not impart equally strong phase errors across all spatial frequencies. The distribution of power imparted by atmospheric turbulence to different spatial scales is described by the Kolmogorov power spectrum, which is given by $P(k)=0.027r_0^{-5/3}k^{-11/3}$  \citep{rampy2012production}. The power spectrum relates the strength of an aberration at a given spatial frequency, $k$, to the seeing conditions, $r_0$. The phase errors imparted by atmospheric turbulence are strongest at low spatial frequencies.
+Atmospheric turbulence does not impart equally strong phase errors across all spatial frequencies. The distribution of power imparted by atmospheric turbulence to different spatial scales is described by the Kolmogorov power spectrum, which is given by $P(k)=0.027r_0^{-5/3}k^{-11/3}$  \citep{rampy2012production}. The power spectrum relates the strength of an aberration at a given spatial frequency, $\kappa$, to the seeing conditions, $r_0$. The phase errors imparted by atmospheric turbulence are strongest at low spatial frequencies.
 
-The effect of atmospheric turbulence is to lower the resolution of the optical system. For a long exposure image, the image is a disk with an angular FWHM of $\approx \frac{\lambda}{r_0 }$. For short exposure images, we expect a speckle pattern of approximately $\frac{D}{r_0}$ speckles of width equal to the diffraction limit of the system. For a system partially corrected for by adaptive optics, the PSF is a diffraction-limited peak surrounded by the residual uncorrected $\frac{D}{r_0}$ halo. Figure \ref{fig:turbPSF} shows a time-averaged closed-loop PSF.
+The effect of atmospheric turbulence is to lower the resolution of the optical system. For a long exposure image, the image is a disk with an angular FWHM of $\approx \frac{\lambda}{r_0 }$. For short exposure images, we expect a speckle pattern of approximately $\frac{D}{r_0}$ speckles of width equal to the diffraction limit of the system. For a system partially corrected for by adaptive optics, the PSF is a diffraction-limited peak overlaid by a residual uncorrected $\frac{\lambda}{r_0}$ halo across the PSF. Figure \ref{fig:turbPSF} shows a time-averaged closed-loop PSF.
 
 \begin{figure}
     \centering
@@ -262,7 +262,7 @@ The effect of atmospheric turbulence is to lower the resolution of the optical s
 
 In astronomy there are different types of adaptive optics systems developed to maximize correction for different objects. Ground Layer Adaptive Optics (GLAO) systems such as ARGOS \citep{rabien2019argos} at the LBT, and 'Imaka \citep{abdurrahman2018improved} at the University of Hawaii 2.2 meter telescope compensate ground layer turbulence to produce a uniform correction across a greater than 1 arcmin field of view. Multi-conjugate Adaptive Optics (MCAO) systems such as the Gemini Multi-conjugate Adaptive Optics System \citep{neichel2014gemini} have multiple deformable mirrors and wavefront sensors conjugated to layers of atmospheric turbulence at different altitudes. MCAO systems provide well corrected PSFs over a large field of view. Extreme adaptive optics systems (ExAO) are adaptive optics systems optimized for excellent wavefront correction of an on-axis guide star at the spatial frequencies of the high-contrast region of a coronagraph. 
 
-Adaptive optics systems operate under the concept of conjugate imaging. Figure \ref{fig:AOdiagram} shows the overview of the optical path of an AO system. Light from the guide star travels through the layers of Earth's atmosphere and acquires phase errors from atmospheric turbulence. In single conjugate AO we model the effects of atmospheric turbulence as a single phase screen at a known altitude that imparts all of the phase errors to the guide star's wavefront. This layer of turbulence is typically modeled to be in the entrance pupil and is imaged to conjugate planes in the AO system. The optical design of an AO system consists primarily of pupil relays that re-size and re-image the pupil plane onto the wavefront sensor and DM so that the turbulence screen is both sensed and corrected in the same plane. Adaptive optics systems work over a wavelength bandpass; to mitigate the effect of chromatic aberrations through the system, mirrors are used as the optics in these pupil relays. In a closed loop AO system the wavefront sensor is placed after the DM. When the loop is closed the wavefront sensor sees a wavefront that is the combination of the atmospheric turbulence and the correction is applied to the DM. There is a time lag between when the wavefront is sensed and when the correction applied which results in uncorrected wavefront errors that are quantified by the temporal error in the AO error budget. ExAO systems are designed to be low latency and run at loop speeds greater than 1-kHz.
+Adaptive optics systems operate under the concept of conjugate imaging. Figure \ref{fig:AOdiagram} shows the overview of the optical path of an AO system \citep{suarez2017approach}. Light from the guide star travels through the layers of Earth's atmosphere and acquires phase errors from atmospheric turbulence. In single conjugate AO we model the effects of atmospheric turbulence as a single phase screen at a known altitude that imparts all of the phase errors to the guide star's wavefront. This layer of turbulence is typically modeled to be in the entrance pupil and is imaged to conjugate planes in the AO system. The optical design of an AO system consists primarily of pupil relays that re-size and re-image the pupil plane onto the wavefront sensor and DM so that the turbulence screen is both sensed and corrected in the same plane. Adaptive optics systems work over a wavelength bandpass; to mitigate the effect of chromatic aberrations through the system, mirrors are used as the optics in these pupil relays. In a closed loop AO system the wavefront sensor is placed after the DM. When the loop is closed the wavefront sensor sees a wavefront that is the combination of the atmospheric turbulence and the correction is applied to the DM. There is a time lag between when the wavefront is sensed and when the correction applied which results in uncorrected wavefront errors that are quantified by the temporal error in the AO error budget. ExAO systems are designed to be low latency and run at loop speeds greater than 1-kHz.
 
 
 
@@ -270,7 +270,7 @@ Adaptive optics systems operate under the concept of conjugate imaging. Figure \
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/Adaptive-Optics-System.png}
-    \caption{Diagram of an adaptive optics closed loop,(\citep{suarez2017approach}). Light from the telescope is first read into the wavefront sensor. A control system uses that signal to compute the commands to drive the deformable into the shape that will correct the wavefront. The result is a corrected wavefront.}
+    \caption{Diagram of an adaptive optics closed loop. Light from the telescope is first read into the wavefront sensor. A control system uses that signal to compute the commands to drive the deformable into the shape that will correct the wavefront. The result is a corrected wavefront \citep{suarez2017approach}.}
     \label{fig:AOdiagram}
 \end{figure}
 
@@ -291,14 +291,15 @@ There are several ExAO instruments in operation on current generation telescopes
 \begin{figure}
     \centering
     \includegraphics{Chapter Materials/Chapter One Materials/StrehlRatio.png}
-    \caption{Aberrated PSF plotted against an aberration-free PSF> The ratio of the two peak values is the Strehl ratio. This is Figure 3.17 in Encyclopedia of Modern Optics.}
+    \caption{Aberrated PSF plotted against an aberration-free PSF. The ratio of the two peak values is the Strehl ratio. This is Figure 3.17 in Encyclopedia of Modern Optics \citep{guenther2018encyclopedia}.}
     \label{fig:SR}
 \end{figure}
 
-An adaptive optics system compensates phase errors to return the resolution of the system to the diffraction limit of the telescope. The correction is not perfect, and we are interested in measuring the performance of the AO system. The Strehl ratio is defined as the ratio between the peak of an imaged PSF, with the peak of an aberration-free PSF \citep{reine2005encyclopedia}. Figure \ref{fig:SR} plots an aberrated PSF against the aberration-free PSF. The peak of the aberrated PSF is smaller than the aberration-free PSF. The Strehl ratio can be used to approximate the residual RMS uncorrected phase errors through the Marechal approximation given by:
+An adaptive optics system compensates phase errors to correct for the degradation of an image due atmospheric turbulence. The correction is not perfect, and we are interested in measuring the performance of the AO system. The Strehl ratio is defined as the ratio between the peak of an imaged PSF, with the peak of an aberration-free PSF \citep{reine2005encyclopedia}. Figure \ref{fig:SR} plots an aberrated PSF against the aberration-free PSF \citep{guenther2018encyclopedia}. The peak of the aberrated PSF is smaller than the aberration-free PSF. The Strehl ratio can be used to approximate the residual RMS uncorrected phase errors through the Marechal approximation given by:
 
 \begin{equation}
     S \cong e^{-\sigma^2}
+    \label{Marechal}
 \end{equation}
 
 \noindent where $S$ is the Strehl ratio, and $\sigma^2$ is the phase variance of the wavefront in units of radians. The measurement of the Strehl ratio for an AO corrected PSF is given by:
@@ -311,7 +312,62 @@ An adaptive optics system compensates phase errors to return the resolution of t
 
 \noindent The Strehl ratio is calculated by taking the ratio of the peak intensity of the partially corrected PSF, $P_{data}$,  to the peak intensity of an aberration free PSF, $P_0$. The peaks are normalized by the flux in the image. A simulated model can be used for the aberration free image. 
 
-In the following chapters we discuss the design and analysis of a wavefront sensor for astronomical adaptive optics. The performance of the wavefront sensor is measured using the Strehl ratio which measures AO system performance. The wavefront sensor is a sub-component of the AO system so there is a direct relationship between the wavefront sensor performance and the performance of the AO system as a whole. The wavefront sensor will be used in experiments performed in simulation and on a testbed to determine the performance of the wavefront sensor. The seeing of atmospheric turbulence can be variable, and the wavefront sensor needs to be robust to different turbulence strengths. This will be tested by measuring the Strehl ratio as a function of turbulence strength. The sensitivity of the wavefront sensor to photon noise is tested by measuring the Strehl for stars of different magnitudes. 
+\section{Adaptive Optics Error Budget}
+
+To predict the expected performance of an AO system an error budget is used to determine the residual wavefront error \citep{hardy}. The correction from an AO system is imperfect to do both atmospheric and instrumental errors. This section briefly describes the different errors that are considered in the AO error budget. These terms are used to inform decisions on the optimization of the AO system performance in different operating conditions. 
+
+\subsection{Fitting Error}
+
+In an AO system, the wavefront sensor measures the shape of the wavefront phase, and the deformable mirror is reshaped to correct the phase error. Fitting error arises from the imperfect match of the deformation of the deformable mirror and the required shape. This is due to the finite number of actuators on a deformable mirror which sets the maximum spatial frequency corrected by the system \citep{roddier1999adaptive}. Increasing the number of actuators is a way to reduce the fitting error. If $\phi_w$ is the wavefront error from turbulence, and $\phi_c$ is the DM best fit then the fitting error is given by:
+\begin{equation}
+    \sigma_F^2=<[\phi_w(x)-\phi_c(x)]^2>
+\end{equation}
+
+\subsection{Temporal Error}
+
+Temporal error is due to the delay of when the measurement of the wavefront is taken and when the correction is applied. The atmosphere is constantly evolving and the time scale for wavefronts to become uncorrelated is estimated by the greenwood frequency $f_G$. The equation for temporal error is:
+
+\begin{equation}
+    \sigma_T^2=<[\phi_w(x,t)-\phi_w(x,t+\delta t)]^2>
+\end{equation}
+\noindent where $\phi_w(x,t)$ is the wavefront error at a given point in time and space, and $\phi_w(x,t+\delta t)$ is the wavefront error after a time $\delta t$ has passed. Increasing the speed of the AO loop reduces temporal error. This results in using shorter exposure times for the wavefront sensing camera, which will reduce the SNR of the wavefront measurement. 
+
+\subsection{Anisoplanatic Error}
+
+The anisoplanatic error is caused by the spatial separation between the guide star and the science target. Wavefront error caused by turbulence varies in both space and time. As the separation between guide star and science target increases, the wavefront errors become decorrelated. This error is an important consideration for wide field of view AO but is not a large term in the ExAO error budget because generally, the science target is close to the star.
+
+\subsection{Wavefront Sensor Errors}\label{WFSerror}
+
+There is a term in the AO error budget that conveys the error from imperfect sensing of the wavefront. The fundamental noise source of a wavefront sensor is photon noise discussed in Section \ref{PhotNoise}. The signal-to-noise ratio (SNR) of the wavefront sensor signal is related to the measurement error, and has been solved analytically for a Shack Hartmann wavefront sensor \cite{tyler1982image}. Lower SNR results in higher measurement errors, which in turn result in worse correction in an AO system. The SNR equation for a CCD camera used for astronomical measurements is\cite{howell2006handbook},
+
+\begin{equation} 
+SNR= \frac{R_\star \times t}{\sqrt{(R \times t)+(RN^2 \times n_{pix})+n_{pix}(N_s+N_D)}}
+\label{SNR}
+\end{equation}
+
+\noindent where $R$ is the photon arrival rate, $t$ is the integration time, $RN$ is the read noise, and $n_{pix}$ is the number of pixels used for wavefront sensing. The terms $N_s$ and $N_D$ refer to the sources of noise from sky background and dark current. The error in the phase measurement is proportional to the the inverse of the SNR\citep{hardy},
+
+\begin{equation}
+    \sigma^2 \propto \frac{1}{SNR^2}
+\end{equation}
+
+\noindent where $\sigma^2$ is the wavefront sensor measurement error. A term can be factored in to account for the quantitative sensitivity of a wavefront sensor to noise sources, and how that translates into a measurement error. In \cite{guyon2005}, the term $B_p$ was used to describe the sensitivity of a wavefront sensor to photon noise, which is stated to be $\sqrt{2}$ for the unmodulated PWFS. We will assume without proof that the sensitivity of the 3PWFS and 4PWFS to noise sources are the same because both wavefront sensors work based on the same underlying physical process of a knife-edge test.
+
+The 3PWFS uses fewer pixels for wavefront sensing, which will result in increased SNR for a detection that is read noise dominated. Using equation \ref{SNR} we calculate the SNR for the 3PWFS and 4PWFS based on guide star magnitude. In Figure \ref{fig:SNRcurve} the SNR for the 3PWFS and 4PWFS was calculated for different guide star magnitudes, for a 24.5 meter primary mirror, and 0.001 second integration time. The number of pixels in each pupil was assumed to be 20,000. The 3PWFS used a total of 60,000 pixels, and for the 4PWFS 80,000 pixels were used. Taking the ratio of the SNR curves shows the gain in SNR from the 3PWFS in low light conditions. In bright light conditions the dominant error is photon noise, and the SNR for both the 3PWFS and 4PWFS is the same. As the light level dims and read noise starts to dominate, the SNR of the 3PWFS measurement is higher than the 4PWFS and converges to a value of $\sqrt{\frac{4}{3}}$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chapter Materials/Chapter Two Materials/SNRcurve.png}
+    \caption{Ratio of the SNR values of the 3PWFS and 4PWFS. In low light conditions when the SNR is dominated by read noise, the ratio converges to $\sqrt{\frac{4}{3}}$.}
+    \label{fig:SNRcurve}
+\end{figure}
+\subsection{Total Error Budget}
+
+The terms in the AO error budget are combined to estimate the expected residual wavefront phase error. The variance of the individual error terms are summed, and the resulting phase error can be plugged into the Marechal approximation given in Equation \ref{Marechal} to calculate the expected Strehl ratio, \citep{hardy}.
+
+In the following chapters, we discuss the design and analysis of a three-sided pyramid wavefront sensor for astronomical adaptive optics. The performance of the 3PWFS is measured using the Strehl ratio which measures AO system performance. The wavefront sensor is a sub-component of the AO system so there is a direct relationship between the wavefront sensor performance and the performance of the AO system as a whole. In the following chapters, we detail experiments that test the 3PWFS performance in comparison to the 4PWFS in both simulations and on a testbed. We test the wavefront sensor under varying conditions such as turbulence strength and guide star magnitude.
+
+
 
 
 
